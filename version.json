@@ -1,8 +1,8 @@
 {
- "version": "2.16.3",
- "notes": "Telefondan kumanda her yerde.",
- "zip": "https://github.com/Hakyolundaa/nabiz/releases/download/v2.16.3/nabiz-guncelleme.zip",
+ "version": "2.16.4",
+ "notes": "Ada her zaman tıklanır; kurulum eksik dosyaları onarıyor.",
+ "zip": "https://github.com/Hakyolundaa/nabiz/releases/download/v2.16.4/nabiz-guncelleme.zip",
  "zipAlt": "https://www.dropbox.com/scl/fi/gxplktseyyqxjyjd89i7f/nabiz-guncelleme.zip?rlkey=ll4d94rsydxgqdxncd2tyuyxu&dl=0",
- "sha256": "0d44a1a069eedb10da87b92ccfe406dfb4d2e0f8f2892620285b46fda87ebe62",
- "sig": "w+HZ4p/MQkuYgzvQJH+1P+6oqaMOPvHq8br3sxNbmk5MU+Yem/H4ppGMtJ4CQVavVpONLr6TTFpjtJuKrvRsDA=="
+ "sha256": "5df348af52ac107a4826e9d17794d08449f2ad08aaf8c92965a50884b16482e6",
+ "sig": "9A+kpU21LUB78kbtx0fCGUIuMS0MsbZqnoE30VNY5tdrna27tq07hugnzBHzriAuVEiOGykPKNEfPaeWmCbdDA=="
 }
