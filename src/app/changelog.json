@@ -1,0 +1,419 @@
+[
+ {
+  "version": "2.16.1",
+  "date": "11 Kasım 2026",
+  "title": "Güncellemeler GitHub'dan",
+  "changes": [
+   "Nabız güncellemelerini artık önce GitHub'dan alıyor; GitHub'a ulaşılamazsa eski yerden (Dropbox) almaya devam ediyor. Senin için bir şey değişmiyor, güncellemeler yine sessizce geliyor."
+  ]
+ },
+ {
+  "version": "2.16.0",
+  "date": "11 Kasım 2026",
+  "title": "Geri bildirim",
+  "changes": [
+   "Yeni: Nabız'ı 1-5 yıldızla puanlayıp düşüncelerini yazabilirsin (Ayarlar → Uygulama → ★ Puanla). Yazdıkların doğrudan geliştiriciye gider.",
+   "Birkaç gün kullandıktan sonra Nabız bir kez, köşede küçük bir kutuyla nasıl bulduğunu soruyor; istemezsen kapatman yeterli."
+  ]
+ },
+ {
+  "version": "2.15.10",
+  "date": "11 Kasım 2026",
+  "title": "Ada düzeltmesi",
+  "changes": [
+   "Nabız'ı açıp kapattıktan sonra adanın tıklanamaz hale gelmesi (tıklamanın alttaki pencereye geçmesi) düzeltildi. Ada artık ana pencere açıkken gizlenmek yerine görünmez oluyor; düğmeler ve sürükleyip taşıma her zaman çalışıyor."
+  ]
+ },
+ {
+  "version": "2.15.9",
+  "date": "11 Kasım 2026",
+  "title": "Daha güvenilir kurulum",
+  "changes": [
+   "Kurulum dosyası artık yayıncı ve sürüm bilgisi taşıyor (dosyaya sağ tık → Özellikler → Ayrıntılar).",
+   "Kurulum, kısayol ve kayıt işlemlerini arka planda PowerShell/komut satırı çalıştırmadan, Windows'un kendi yöntemleriyle yapıyor. Bu, bazı antivirüslerin Nabız'ı yanlışlıkla “şüpheli” saymasını azaltır.",
+   "Kullanılmayan güvenlik duvarı izni özelliği kaldırıldı (telefona gönderme artık internet üzerinden çalışıyor)."
+  ]
+ },
+ {
+  "version": "2.15.8",
+  "date": "11 Kasım 2026",
+  "title": "Adayı taşıma düzeltmesi",
+  "changes": [
+   "Nabız adası artık her yerinden (düğmelerin üstünden de) tutulup sürüklenebiliyor; bazı bilgisayarlarda sürükleyince yerinden kıpırdamama sorunu düzeltildi. Sürükledikten sonra düğmeye yanlışlıkla basılmış sayılmıyor."
+  ]
+ },
+ {
+  "version": "2.15.7",
+  "date": "11 Kasım 2026",
+  "title": "Tek dokunuşla paylaş",
+  "changes": [
+   "Söz kartında Instagram / Telefona gönder: QR'ı okutunca telefonda kart açılıyor ve altında büyük bir “Paylaş” düğmesi çıkıyor; basınca Instagram (Hikâye), WhatsApp ve diğer uygulamalar listeleniyor. Artık görsele basılı tutmaya gerek yok.",
+   "Kart artık hiçbir görsel servisine yüklenmiyor; şarkı adı ve söz QR'ın içinde gidiyor, kart telefonda çiziliyor."
+  ]
+ },
+ {
+  "version": "2.15.6",
+  "date": "11 Kasım 2026",
+  "title": "Telefona gönder düzeltmesi",
+  "changes": [
+   "Türkiye'de erişimi engellenen görsel servisi (catbox) kaldırıldı; kart artık uguu üzerinden paylaşılıyor ve birkaç saat sonra siliniyor."
+  ]
+ },
+ {
+  "version": "2.15.5",
+  "date": "11 Kasım 2026",
+  "title": "Telefona gönder artık her yerde",
+  "changes": [
+   "Söz kartını telefona gönderirken (Instagram / Telefona gönder) kart artık internette geçici bir linke yükleniyor; QR'ı okutunca telefonda direkt açılıyor. Aynı Wi-Fi'da olmak gerekmiyor, mobil veriyle de çalışıyor; siyah ekran / “siteye ulaşılamıyor” sorunu çözüldü.",
+   "Yüklenen sadece söz kartı görseli; ücretsiz geçici görsel servisinde (litterbox / uguu) tutuluyor ve 1 saat sonra siliniyor. İnternet yoksa eski Wi-Fi yöntemi yedek olarak çalışıyor."
+  ]
+ },
+ {
+  "version": "2.15.4",
+  "date": "11 Kasım 2026",
+  "title": "Telefona gönder düzeltmesi",
+  "changes": [
+   "QR'ı okutunca telefonda siyah ekran kalma sorunu düzeltildi: Windows Güvenlik Duvarı telefonun bağlanmasını engelliyordu. Artık Nabız bunu fark edip tek seferlik “İzin ver” düğmesi gösteriyor; Windows sorunca Evet demen yeterli.",
+   "Bilgisayarda VPN ya da sanal ağ kartı varsa QR yanlış adresi gösterebiliyordu; artık Wi-Fi/Ethernet adresi seçiliyor, açılmazsa yedek adresler de yazıyor.",
+   "Aynı düzeltme “Telefondan kumanda” için de geçerli."
+  ]
+ },
+ {
+  "version": "2.15.3",
+  "date": "11 Kasım 2026",
+  "title": "Günün sözü en üstte",
+  "changes": [
+   "“Günün sözü” artık ana sayfanın en üstünde, arama kutusunun hemen altında. Arama yaparken sonuçların önüne geçmesin diye gizleniyor."
+  ]
+ },
+ {
+  "version": "2.15.2",
+  "date": "11 Kasım 2026",
+  "title": "Günün sözü",
+  "changes": [
+   "Ana sayfada yeni “Günün sözü”: en çok dinlediğin şarkılardan her gün bir satır (çoğunlukla nakarattan). “Bu satırdan çal” şarkıyı tam o satırdan başlatır, ↻ ile başka bir söz seçebilirsin.",
+   "Söz kartında artık seçtiğin satırın şarkıdaki dakikası görünüyor (ör. ▶ 1:23 ──●── 3:20). İstemezsen “Şarkıdaki dakikasını göster”i kapat.",
+   "Söz kartındaki satır listesinde her satırın dakikası yazıyor."
+  ]
+ },
+ {
+  "version": "2.15.1",
+  "date": "11 Kasım 2026",
+  "title": "Söz kartını paylaş",
+  "changes": [
+   "Söz kartında yeni “Paylaş” düğmeleri: Instagram, WhatsApp, Telefona gönder.",
+   "Instagram / Telefona gönder: bir QR kod çıkar. Telefonla okut, açılan sayfada karta basılı tut → Paylaş → Instagram hikâyesi ya da WhatsApp. Bağlantı 15 dakika geçerli ve sadece o kartı gösterir; telefon aynı Wi-Fi'da olmalı.",
+   "WhatsApp: kart panoya kopyalanır ve WhatsApp (yoksa WhatsApp Web) açılır; sohbeti seçip Ctrl+V ile yapıştırman yeterli.",
+   "İpucu: Instagram hikâyesi için “Hikâye” biçimini seç."
+  ]
+ },
+ {
+  "version": "2.15.0",
+  "date": "11 Kasım 2026",
+  "title": "Sözü olmayan şarkılar",
+  "changes": [
+   "Söz arama daha akıllı: şarkı adı farklı yazılmış, Türkçe karakterleri eksik ya da sanatçı adı farklı olan şarkıların sözleri artık çok daha sık bulunuyor.",
+   "Söz veritabanında olmayan şarkılarda Nabız videonun altyazısına bakıyor ve onu zamanlı söz olarak gösteriyor. Otomatik altyazıysa küçük bir notla belirtiliyor (birkaç kelime hatalı olabilir).",
+   "Hiçbir yerde söz yoksa “Sözleri kendin ekle”: sözleri yapıştır, şarkı çalarken her satır başladığında Boşluk'a bas, zamanlı sözler hazır. Geri tuşu son satırı geri alır.",
+   "Düz metin olarak gelen sözleri de “Şarkıyla zamanla” ile zamanlı hale getirebilirsin. Eklediğin sözler sadece senin bilgisayarında saklanır; istediğin zaman düzenleyip silebilirsin."
+  ]
+ },
+ {
+  "version": "2.14.3",
+  "date": "11 Kasım 2026",
+  "title": "Alarm sesi",
+  "changes": [
+   "Alarm artık Nabız'ın o anki sesinden bağımsız: çok kısık başlıyor ve 1 dakikada seçtiğin “Alarm sesi” seviyesine kadar yükseliyor (varsayılan %70). Ses çubuğu da yükselirken hareket ediyor.",
+   "Ayarlar → Müzikli alarm → “Alarm sesi” ile seviyeyi seç; “Şimdi çal” denemesinde ses 10 saniyede o seviyeye çıkıyor."
+  ]
+ },
+ {
+  "version": "2.14.2",
+  "date": "11 Kasım 2026",
+  "title": "Alarm düzeltildi",
+  "changes": [
+   "Müzikli alarm, o an hiçbir şarkı çalmıyorsa hiç çalışmıyordu; düzeltildi. Artık Nabız arka planda açıksa (saatin yanındaki simgede) her durumda vaktinde çalar.",
+   "Ayarlar → Müzikli alarm'da bir sonraki alarmın ne zaman çalacağı yazıyor; “Şimdi çal” ile alarmı hemen deneyebilirsin.",
+   "Alarm çaldığında Windows bildirimi de geliyor; ses çok kısıksa alarm için otomatik olarak duyulur seviyeye açılıyor."
+  ]
+ },
+ {
+  "version": "2.14.1",
+  "date": "11 Kasım 2026",
+  "title": "Oyunlarda ada",
+  "changes": [
+   "Rehberde, tanıtım turunda ve Ayarlar → Masaüstü adası'nda artık açıkça yazıyor: adanın oyunda görünmesi için oyunun ekran modu Çerçevesiz (Kenarlıksız / Pencereli tam ekran) ya da Pencereli olmalı. “Tam ekran” modunda Windows adayı oyunun üstünde gösteremez."
+  ]
+ },
+ {
+  "version": "2.14.0",
+  "date": "11 Kasım 2026",
+  "title": "Nabız Rehberi",
+  "changes": [
+   "Yeni Rehber sayfası: Nabız'ın bütün özellikleri ve ipuçları tek yerde (Ayarlar → Uygulama → Rehber ya da ? tuşu → Rehberi aç).",
+   "Nabız'ı ilk kez açanlara, sanatçı seçiminden sonra 7 adımlık kısa bir tanıtım turu gösteriliyor. Rehber sayfasından istediğin zaman yeniden başlatabilirsin."
+  ]
+ },
+ {
+  "version": "2.13.0",
+  "date": "11 Kasım 2026",
+  "title": "Kesintisiz geçişler ve Performans modu",
+  "changes": [
+   "Şarkılar arası bekleme gitti: Nabız sıradaki şarkıyı (karışık çalmada bile) sen dinlerken önceden hazırlıyor; Türkiye listesi, albüm, sanatçı sayfası ve Keşfet'ten çalarken geçişler artık anında.",
+   "Karışık çalarken de masaüstü adası sıradaki şarkıyı gösteriyor.",
+   "Performans modu (Ayarlar → Görünüm): bulanık cam ve arka plan ışığı kapanır; zayıf bilgisayarlarda ve oyun oynarken daha akıcı. Zayıf bilgisayarlarda kendiliğinden açılır.",
+   "Senin için kartları az kart olduğunda da boşluk bırakmıyor."
+  ]
+ },
+ {
+  "version": "2.12.1",
+  "date": "11 Kasım 2026",
+  "title": "Düzeltmeler",
+  "changes": [
+   "Sağ paneldeki şarkı kapağı, sırada çok şarkı olduğunda kayboluyordu; düzeltildi.",
+   "Masaüstü adası, Nabız penceresi öndeyken artık güvenilir şekilde gizleniyor."
+  ]
+ },
+ {
+  "version": "2.12.0",
+  "date": "11 Kasım 2026",
+  "title": "Yeni ikon",
+  "changes": [
+   "Nabız'ın yeni ikonu: kalp atışı çizgisi ses dalgasına dönüşüyor. Pencerede, görev çubuğunda, saatin yanındaki simgede ve uygulamanın sol üstündeki logoda.",
+   "Masaüstü kısayolundaki ikon Windows'un ikon önbelleği yüzünden biraz geç değişebilir; değişmezse bilgisayarı bir kez yeniden başlatmak yeter.",
+   "Yönetici panelinde sorun bildirimlerini silebilme (sadece Nabız'ı yayınlayan bilgisayarda)."
+  ]
+ },
+ {
+  "version": "2.11.3",
+  "date": "11 Kasım 2026",
+  "title": "Küçük düzeltmeler",
+  "changes": [
+   "Kararlılık iyileştirmeleri."
+  ]
+ },
+ {
+  "version": "2.11.2",
+  "date": "11 Kasım 2026",
+  "title": "Daha temiz görünüm, daha az boşluk",
+  "changes": [
+   "Kapaklardaki siyah şeritler gitti: YouTube'dan gelen küçük resimler artık her yerde kırpılarak tam dolu görünüyor.",
+   "Türkiye'de bugün listesi Apple'ın sunucusu cevap vermediğinde boş kalmıyor; son alınan liste gösteriliyor, “Güncelle” ile tekrar denenebiliyor. Ana sayfa açılışta da anında doluyor.",
+   "Masaüstü adası, Nabız penceresi öndeyken gizleniyor ve başka bir pencereye ya da oyuna geçince geri geliyor. İstersen Ayarlar → Masaüstü adası'ndan kapatabilirsin.",
+   "Takip ettiğin sanatçılar ana sayfada tek sıra, yana kayan bir şerit oldu.",
+   "“Senin için” kartları artık boşluk bırakmadan diziliyor.",
+   "Liste sayfası sadeleşti: Yeniden adlandır ve Sil “⋯” menüsünde; şarkı sayısı “23 şarkı” diye yazıyor."
+  ]
+ },
+ {
+  "version": "2.11.1",
+  "date": "11 Kasım 2026",
+  "title": "Yeni Ayarlar penceresi",
+  "changes": [
+   "Ayarlar artık sekmeli: solda bölümler (Görünüm, Oynatma, Masaüstü adası, Alarm, Telefondan kumanda, Discord, Uygulama, Güncellemeler, Verilerin), sağda sadece seçtiğin bölüm. Uzun uzun kaydırmak yok.",
+   "Sol üstteki “Ayarlarda ara” kutusuyla istediğin ayarı yazarak bul.",
+   "Ayarları tekrar açtığında en son baktığın bölümden devam eder."
+  ]
+ },
+ {
+  "version": "2.11.0",
+  "date": "10 Kasım 2026",
+  "title": "Sorun bildir",
+  "changes": [
+   "Ayarlar → Uygulama → “Sorun bildir”: bir şey bozuksa yaz, doğrudan Nabız'ın geliştiricisine gitsin. İstersen teknik bilgileri (sürüm, Windows sürümü, son hata kayıtları) de ekler; kişisel bilgi eklenmez.",
+   "Nabız artık günde bir kez isimsiz bir “açığım” sinyali gönderiyor; böylece kaç kişinin kullandığı ve sürümler görülebiliyor. Dinlediğin şarkılar, listelerin ve geçmişin hiçbir zaman gönderilmez.",
+   "İstemezsen Ayarlar → Uygulama → “Kullanım sinyali”ni kapat; kapalıyken hiçbir şey gönderilmez."
+  ]
+ },
+ {
+  "version": "2.10.1",
+  "date": "10 Kasım 2026",
+  "title": "İzlenme sayıları",
+  "changes": [
+   "Arama sonuçlarında her videonun altında izlenme sayısı ve ne zaman yüklendiği yazıyor; resmi klibi cover'dan ya da canlı versiyondan ayırmak kolaylaştı.",
+   "Canlı yayınlar sekmesinde kaç kişinin izlediği, podcast sekmesinde süre ve yayın tarihi görünüyor.",
+   "Sanatçı sayfasındaki popüler şarkıların yanında 5 çizgilik popülerlik göstergesi var."
+  ]
+ },
+ {
+  "version": "2.10.0",
+  "date": "10 Kasım 2026",
+  "title": "Yeni modern görünüm",
+  "changes": [
+   "Baştan sona yeni görünüm: buzlu cam paneller ve çalan şarkının renginden arka plan ışığı.",
+   "Alttaki çalma çubuğu artık yüzen bir dock; oynat düğmesi şarkının rengiyle parlıyor.",
+   "Senin için bölümünde Akış büyük vitrin kartı oldu; diğer kartlar yanında.",
+   "Şarkı kartları sadeleşti: büyük kapak, üzerine gelince kalkan efekt; düğmeler sadece fareyle üstüne gelince görünür.",
+   "Daha büyük başlıklar, yuvarlak düğmeler ve yeni ayarlar penceresi. Açık tema da yenilendi; “Parlama efekti” kapalıyken arka plan ışığı kısılır."
+  ]
+ },
+ {
+  "version": "2.9.1",
+  "date": "10 Kasım 2026",
+  "title": "Sözler artık sese oturuyor",
+  "changes": [
+   "Her şarkının sözlerini ayrı ayrı kaydırabilirsin: Sözler sekmesinin üstündeki “− erken / geç +” düğmeleri ya da [ ve ] tuşları. Ayar o şarkı için kalıcı olarak hatırlanır.",
+   "En hızlısı: şarkıcı bir satırı söylerken Shift basılıyken o satıra tıkla; tüm sözler o ana hizalanır.",
+   "Video, sözlerin ait olduğu kayıttan belirgin şekilde uzun ya da kısaysa (örneğin klipte giriş varsa) Nabız bunu söyler.",
+   "Aynı şarkının farklı uzunluktaki videolarında artık doğru söz kaydı seçiliyor; sözler bir tık daha erken gösteriliyor."
+  ]
+ },
+ {
+  "version": "2.9.0",
+  "date": "10 Kasım 2026",
+  "title": "Büyük ekran",
+  "changes": [
+   "Alttaki çubukta şarkının kapağına ya da adına tıkla: video, şarkı adı ve o anki söz satırıyla tam ekran “Şimdi çalıyor” açılır. Esc ya da üstteki ⌄ ile kapanır.",
+   "Videoya tıklayınca durur/devam eder; videonun üzerinde artık YouTube'un kendi kontrol çubuğu yok, her şeyi Nabız'ın düğmeleri yönetiyor.",
+   "Sağ panelde video yerine şarkının kapağı duruyor; kapağa tıklayınca da büyük ekran açılır."
+  ]
+ },
+ {
+  "version": "2.8.3",
+  "date": "10 Kasım 2026",
+  "title": "Keşfet artık sana göre",
+  "changes": [
+   "Keşfet bölümü artık seçtiğin, takip ettiğin, beğendiğin ve en çok dinlediğin sanatçılardan besleniyor: onların şarkıları, onlara benzeyen şarkılar ve benzer sanatçılardan seçmeler.",
+   "Başlığın yanında hangi sanatçılardan yola çıkıldığı yazıyor; “Yenile” her seferinde başka sanatçılarla yeni 10 şarkı getiriyor.",
+   "Daha önce dinlediğin ve “Bunu bir daha önerme” dediğin şarkılar Keşfet'e gelmez. Hiç sanatçı seçmediysen eskisi gibi türlerden karışık gelir."
+  ]
+ },
+ {
+  "version": "2.8.2",
+  "date": "10 Kasım 2026",
+  "title": "Kitaplık kaldırıldı",
+  "changes": [
+   "Kitaplık bölümü tamamen kaldırıldı. Şarkıların artık sadece Beğenilenler'de ve çalma listelerinde duruyor.",
+   "Sadece “+ Ekle” ile kitaplığa eklediğin şarkılar kaybolmasın diye “Kaydettiklerim” adlı bir listeye taşındı.",
+   "Şarkı kartlarındaki “+ Ekle” düğmesi kalktı; bir şarkıyı saklamak için beğen ya da bir listeye ekle.",
+   "Beğenilenler sayfasında çoklu seçimle toplu “Beğeniden çıkar”."
+  ]
+ },
+ {
+  "version": "2.8.1",
+  "date": "10 Kasım 2026",
+  "title": "Daha sade Nabız",
+  "changes": [
+   "Kitaplık artık sol menüde kendi sayfasında: arama ve sıralama orada. Ana sayfada sadece son eklediğin 10 şarkı duruyor.",
+   "“Senin için” en fazla 6 kart gösteriyor. “Unuttukların” ve “Gece listen” Geçmiş & Özet sayfasına taşındı.",
+   "Ruh haline göre kartları tek sırada; fare tekerleğiyle yana kaydırabilirsin.",
+   "Gereksiz YouTube API anahtarı ayarı ve “Kalite: otomatik” yazısı kaldırıldı.",
+   "İlk sürümlerden kalan eski kodlar temizlendi; yeni kurulumlarda açılışta arka planda Chrome açılması da artık yok."
+  ]
+ },
+ {
+  "version": "2.8.0",
+  "date": "10 Kasım 2026",
+  "title": "Hatıralar, rozetler ve söz kartı",
+  "changes": [
+   "Hatıralar: ana sayfada geçen yıl, 6 ay ve 1 ay önce bugün en çok dinlediğin şarkı. Tıkla, o güne dön.",
+   "Zaman kapsülü: her ay bitince o ayın en çok dinlediğin 30 şarkısı kendiliğinden “Ekim 2026” gibi bir listeye dönüşür. Senin için bölümünde ve Geçmiş & Özet sayfasında.",
+   "Rozetler ve seri: 16 rozet (Gece Kuşu, Kâşif, Maratoncu, Sadık Dinleyici…) ve kaç gündür üst üste dinlediğini gösteren 🔥 seri. Hepsi Geçmiş & Özet sayfasında, ilerlemeleriyle birlikte.",
+   "Hava durumuna göre öneri: Ayarlar → Oynatma'ya şehrini yaz; ana sayfada havaya uygun liste çıkar (yağmurda yağmur şarkıları, karda kış, gece sakin…). Yeni ruh halleri: Karlı gün ve Gece.",
+   "Söz kartı: Şarkı sözleri sayfasında “Söz kartı” düğmesi ya da bir söz satırına sağ tık. 1–4 satır seç, kapaklı şık bir görsel olarak kaydet ya da panoya kopyala."
+  ]
+ },
+ {
+  "version": "2.7.0",
+  "date": "10 Kasım 2026",
+  "title": "Çoklu seçim, kısayollar ve bildirimler",
+  "changes": [
+   "Çoklu seçim: Ctrl+tık ile tek tek, Shift+tık ile aradakilerin hepsini seç. Alttaki çubuktan hepsini birden çal, sıraya ekle, listeye ekle, beğen ya da kaldır. Ctrl+A sayfadaki tüm şarkıları seçer.",
+   "Klavye kısayolları: ? tuşuna bas, hepsi tek pencerede. Yeni kısayollar: ↑↓ ses, M sessiz, L beğen.",
+   "Masaüstü adası açıldığında sıradaki şarkıyı da gösteriyor.",
+   "Şarkı değişince Windows bildirimi (kapağıyla). Nabız penceresi öndeyken çıkmaz; Ayarlar → Oynatma'dan kapatabilirsin.",
+   "Yeni kurulumlarda ilk açılışta sevdiğin sanatçıları seçiyorsun; Akış ve öneriler ilk günden sana göre oluyor. Ayarlar → Oynatma → Zevklerin'den sen de seçebilirsin."
+  ]
+ },
+ {
+  "version": "2.6.1",
+  "date": "10 Kasım 2026",
+  "title": "Doğru sanatçı",
+  "changes": [
+   "“Sanatçıya git” artık şarkının kendisine bakarak doğru sanatçıyı buluyor; aynı ya da benzer isimli başka birine gitmiyor.",
+   "YouTube kanal adlarındaki VEVO, Official gibi ekler sanatçı adından temizleniyor.",
+   "Sanatçı kesin bulunamazsa alakasız biri yerine YouTube'daki şarkılarıyla bir sayfa açılıyor."
+  ]
+ },
+ {
+  "version": "2.6.0",
+  "date": "10 Kasım 2026",
+  "title": "Akış, takip, Wrapped ve daha fazlası",
+  "changes": [
+   "Akış: Senin için bölümündeki tek düğmeyle sana göre bitmeyen müzik. Sevdiklerinden yola çıkar, arada favorilerini de çalar.",
+   "Sanatçı takip et: sanatçı sayfasındaki düğmeyle takip et; son iki ayda çıkardıkları ana sayfada “Yeni çıkanlar”da görünür.",
+   "Gizli oturum: sol alttaki maske düğmesi. Açıkken dinlediklerin geçmişe, özete ve önerilere yazılmaz, Discord'da görünmez.",
+   "Uzun videolarda (podcast, mix) kaldığın yerden devam: 15 dakikadan uzun bir videoyu yarıda bırakırsan, sonra kaldığın dakikadan başlar.",
+   "⋯ menüsünde “Bunu bir daha önerme”: o şarkı radyo, akış ve karışıklarda bir daha çıkmaz.",
+   "Çalma listesi içe aktarma: Çalma listelerin → + → Spotify ya da Deezer linkini yapıştır, ya da şarkı adlarını satır satır yaz.",
+   "Liste paylaşma: liste sayfasındaki Paylaş düğmesi bir kod verir. Arkadaşın kodu yapıştırınca liste onun Nabız'ına kopyalanır; kitaplıklarınız ayrı kalır.",
+   "Nabız Wrapped: Geçmiş & Özet sayfasında yılın hikâye şeklinde müzik özeti. Aralık'ta ana sayfada da çıkar.",
+   "Ruh haline göre: Çalışırken, Spor, Yağmurlu gün, Yolculuk, Uyku, Parti, Aşk, Güne başla."
+  ]
+ },
+ {
+  "version": "2.5.1",
+  "date": "10 Kasım 2026",
+  "title": "Arama düzeltmeleri",
+  "changes": [
+   "Arama önerileri artık sayfadaki kartların altında kalmıyor, her zaman en üstte görünüyor.",
+   "Soldaki Ara kutusu artık gerçek bir arama kutusu: doğrudan yazıp Enter'a basabilirsin, öneriler orada da çıkıyor.",
+   "/ tuşu soldaki arama kutusunu açar."
+  ]
+ },
+ {
+  "version": "2.5.0",
+  "date": "10 Kasım 2026",
+  "title": "Sanatçılar, albümler ve şarkı radyosu",
+  "changes": [
+   "Sanatçı sayfaları: popüler şarkılar, albümler, single'lar ve benzer sanatçılar. Bir sanatçının adına tıklaman yeterli.",
+   "Albüm görünümü: şarkılar sırasıyla listelenir; tamamını çalabilir ya da tek tıkla listeye kaydedebilirsin.",
+   "Arama önerileri: yazarken öneriler çıkar, ok tuşları ve Enter ile seçebilirsin.",
+   "Aramada yeni sekmeler: Şarkılar, Canlı yayınlar, Podcast & uzun içerik. Sanatçı adı arayınca en üstte sanatçı kartı çıkar.",
+   "⋯ menüsünde “Bu şarkıdan radyo başlat”: şarkı çalar, sıra benzer şarkılarla dolar.",
+   "Sağ panelde video seçenekleri: çalma hızı (0,5x–2x) ve CC altyazı. Kaliteyi YouTube bağlantına göre otomatik seçer; gömülü oynatıcıda elle değiştirilemiyor.",
+   "Şarkı eşleştirme şarkının süresine de bakıyor, böylece doğru sürüm daha sık bulunuyor."
+  ]
+ },
+ {
+  "version": "2.4.1",
+  "date": "10 Kasım 2026",
+  "title": "Her yerden listeye ekle",
+  "changes": [
+   "Her şarkı kartında yeni “Listeye ekle” düğmesi: ana sayfa, keşfet, Türkiye listesi, arama sonuçları ve kitaplık.",
+   "Listeler menüsünde şarkının zaten bulunduğu listeler ✓ ile görünür; buradan yeni liste de açabilirsin.",
+   "Herhangi bir şarkı kartını sürükleyip soldaki menüde bir listenin üzerine bırakarak ekleyebilirsin.",
+   "Alttaki çubukta, o an çalan şarkıyı listeye eklemek için yeni düğme."
+  ]
+ },
+ {
+  "version": "2.4.0",
+  "date": "10 Kasım 2026",
+  "title": "Yenilikleri artık görüyorsun",
+  "changes": [
+   "Nabız her güncellendiğinde bu pencere açılır ve neyin yeni olduğunu gösterir.",
+   "Birkaç sürüm birden atlarsan hepsinin yenilikleri sırayla burada listelenir.",
+   "Ayarlar → Güncellemeler'den bu pencereyi istediğin zaman tekrar açabilirsin."
+  ]
+ },
+ {
+  "version": "2.3.1",
+  "date": "10 Kasım 2026",
+  "title": "Kitaplık ve listeler",
+  "changes": [
+   "Kartlarda her zaman görünen Ekle / Kaldır düğmeleri; yanlışlıkla kaldırırsan 5 saniye “Geri al”.",
+   "Çalma listesi sayfasında şarkı arayıp tek tıkla listeye ekleme.",
+   "“Kitaplığından ekle” ile kitaplığındaki şarkılardan seçip listeye ekleme."
+  ]
+ },
+ {
+  "version": "2.3.0",
+  "date": "10 Kasım 2026",
+  "title": "Yeni modern menü",
+  "changes": [
+   "Cam görünümlü, vurgu renginde parlayan yeni menü.",
+   "Listeler kapak mozaiğiyle; çalan listenin yanında ses çubukları.",
+   "Menü tek tıkla simgelere daraltılabiliyor, tema düğmesi altta."
+  ]
+ }
+]
