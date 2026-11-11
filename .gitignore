@@ -1,0 +1,4 @@
+*.exe
+*.zip
+*.syso
+node_modules/
