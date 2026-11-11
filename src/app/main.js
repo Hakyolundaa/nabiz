@@ -534,6 +534,23 @@ function run() {
       cfg.pos = 'custom'; cfg.x = x; cfg.y = y; saveCfg(); buildMenu();
     }
     ipcMain.on('drag-end', endIslandDrag);
+    // İmleç takibi: NVIDIA / Discord bindirmesi gibi görünmez bir katman adanın üstüne geçse bile
+    // fare adaya gelince Nabız bunu kendisi fark eder; ada sayfası imlecin adanın üstünde olup olmadığına bakar.
+    let curIn = false, lastFront = 0;
+    const probe = p => { try { island.webContents.send('island-probe', p); } catch {} };
+    setInterval(() => {
+      if (!island || island.isDestroyed()) return;
+      if (!cfg.island || islandAutoHidden || dragT || !island.isVisible()) { if (curIn) { curIn = false; probe(null); } return; }
+      const p = screen.getCursorScreenPoint(), b = island.getBounds();
+      if (p.x >= b.x && p.x < b.x + b.width && p.y >= b.y && p.y < b.y + b.height) { curIn = true; probe({ x: p.x - b.x, y: p.y - b.y }); }
+      else if (curIn) { curIn = false; probe(null); }
+    }, 150);
+    // imleç adaya girdi ama ada fareyi duymuyor: adayı öne al (en fazla 1,5 sn'de bir, odağı çalmadan)
+    ipcMain.on('island-front', () => {
+      if (!island || island.isDestroyed() || islandAutoHidden || !cfg.island || dragT) return;
+      const now = Date.now(); if (now - lastFront < 1500) return; lastFront = now;
+      try { if (cfg.alwaysTop) { island.setAlwaysOnTop(false); island.setAlwaysOnTop(true, 'screen-saver', 1); } island.moveTop(); } catch {}
+    });
 
     // güncelleme
     ipcMain.handle('version', () => VERSION);

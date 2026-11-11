@@ -218,6 +218,21 @@ isl.addEventListener('click',e=>{ if(justDragged){ e.stopPropagation(); e.preven
 
 // ana pencere açılıp kapanınca vb.: fare durumunu sıfırla, imleç zaten üstündeyse tekrar tıklanabilir yap
 window.ada&&ada.onIslandReset&&ada.onIslandReset(()=>{ down=null; dragging=false; isl.classList.remove('dragging'); if(isl.matches(':hover')){ ada.clickable(true); if(HOVER) isl.classList.add('open') } else isl.classList.remove('open') });
+// imleç takibi (ana süreçten): üstte görünmez bir katman (NVIDIA/Discord bindirmesi vb.) olsa bile
+// imleç adaya gelince ada öne alınır ve tıklanabilir olur; imleç çıkınca eski haline döner
+let probeIn=false, probeCk=0;
+window.ada&&ada.onProbe&&ada.onProbe(p=>{
+  if(dragging||down) return;
+  let inPill=false;
+  if(p){ const r=isl.getBoundingClientRect(); inPill=p.x>=r.left-2&&p.x<=r.right+2&&p.y>=r.top-2&&p.y<=r.bottom+2; }
+  if(!inPill){
+    if(probeIn){ probeIn=false; if(!isl.matches(':hover')){ clearTimeout(leaveT); leaveT=setTimeout(()=>{ if(!probeIn&&!isl.matches(':hover')){ isl.classList.remove('open'); ada.clickable(false) } },HOVER?300:900) } }
+    return;
+  }
+  clearTimeout(leaveT);
+  if(!probeIn){ probeIn=true; if(!isl.matches(':hover')){ ada.clickable(true); ada.front&&ada.front(); if(HOVER) isl.classList.add('open') } return; }
+  const n=Date.now(); if(!isl.matches(':hover')&&n-probeCk>800){ probeCk=n; ada.clickable(true) }
+});
 // güvenlik: imleç adanın üstündeyken arada bir tıklanabilirliği tazele
 isl.addEventListener('mousemove',()=>{ const n=Date.now(); if(!dragging&&(!window.__ck||n-window.__ck>800)){ window.__ck=n; window.ada&&ada.clickable(true) } });
 

@@ -521,7 +521,14 @@ func install() {
 	time.Sleep(700 * time.Millisecond)
 
 	have, _ := os.ReadFile(marker)
-	if !exists(exe) || strings.TrimSpace(string(have)) != engineVer {
+	// motorun ana dosyaları da yerinde mi? (antivirüs/temizlik programı silmişse işaret dosyası kalsa da yeniden indir)
+	engineOK := exists(exe)
+	for _, f := range []string{"icudtl.dat", "ffmpeg.dll", "chrome_100_percent.pak", "resources.pak", "v8_context_snapshot.bin", "d3dcompiler_47.dll"} {
+		if !exists(filepath.Join(dest, f)) {
+			engineOK = false
+		}
+	}
+	if !engineOK || strings.TrimSpace(string(have)) != engineVer {
 		os.RemoveAll(dest)
 		if err := os.MkdirAll(dest, 0755); err != nil {
 			fail(err)

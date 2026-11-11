@@ -17,6 +17,8 @@ contextBridge.exposeInMainWorld('ada', {
   getResume: () => ipcRenderer.invoke('get-resume'),
   islandMenu: () => ipcRenderer.send('island-menu'),
   onIslandReset: f => ipcRenderer.on('island-reset', () => f()),
+  onProbe: f => ipcRenderer.on('island-probe', (_e, p) => f(p)),
+  front: () => ipcRenderer.send('island-front'),
   saveImage: (dataUrl, name) => ipcRenderer.invoke('save-image', dataUrl, name),
   shareCard: (dataUrl, title) => ipcRenderer.invoke('share-card', dataUrl, title),
   shareOpen: target => ipcRenderer.invoke('share-open', target),

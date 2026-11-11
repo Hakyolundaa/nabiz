@@ -1,5 +1,14 @@
 [
  {
+  "version": "2.16.4",
+  "date": "11 Kasım 2026",
+  "title": "Ada her zaman tıklanır",
+  "changes": [
+   "Adadaki düğmeler, NVIDIA ya da Discord oyun içi bindirmesi açıkken de çalışıyor: fare adaya gelince Nabız bunu kendisi fark edip adayı öne alıyor.",
+   "Bir antivirüs ya da temizlik programı Nabız'ın motor dosyalarını silerse Nabız açılmıyordu. Artık kurulum dosyasını yeniden çalıştırmak eksik dosyaları kendiliğinden indirip onarıyor; kitaplığın ve ayarların silinmiyor."
+  ]
+ },
+ {
   "version": "2.16.3",
   "date": "11 Kasım 2026",
   "title": "Telefondan kumanda her yerde",
