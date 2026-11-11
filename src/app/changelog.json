@@ -1,5 +1,15 @@
 [
  {
+  "version": "2.16.2",
+  "date": "11 Kasım 2026",
+  "title": "Daha güvenli güncellemeler",
+  "changes": [
+   "Güncellemeler artık dijital olarak imzalı: Nabız, sadece Nabız'ın yayıncısı tarafından imzalanmış ve dosya özeti birebir tutan güncellemeleri kuruyor. Güncelleme sunucusu ele geçirilse bile sahte bir güncelleme kurulamaz.",
+   "Güncelleme kaynaklarından biri geride kalsa bile Nabız hepsine bakıp en yeni geçerli sürümü seçiyor.",
+   "Nabız'ı kaldırırken “verilerim de silinsin” dense bile yönetici paneli ayarları korunuyor (yeni kurulumlarda geçerli)."
+  ]
+ },
+ {
   "version": "2.16.1",
   "date": "11 Kasım 2026",
   "title": "Güncellemeler GitHub'dan",

@@ -43,17 +43,46 @@ function run() {
   // Güncelleme kaynakları: önce GitHub, ulaşılamazsa Dropbox (yedek). Her kaynak version.json döndürür.
   const srcManifest = b => { b = String(b || '').replace(/\/$/, ''); if (!b) return ''; return /\.json(\?|$)|dropbox\.com/i.test(b) ? direct(b) : b + '/version.json'; };
   const updateSources = () => [...new Set([cfg.updateUrl, ...(VINFO.updateUrls || []), VINFO.updateUrl].filter(Boolean))];
-  async function fetchManifest(needPanel) {
-    for (const b of updateSources()) {
+  // ---- Güncelleme imzası (Ed25519) ----
+  // Sürüm dosyası (version.json) sadece Nabız'ı yayınlayanda duran özel anahtarla imzalanır.
+  // İmza; sürüm, güncelleme paketinin SHA-256 özeti ve panel adresini kapsar. İmzası tutmayan
+  // güncelleme kurulmaz, imzasız panel adresi kullanılmaz (sunucu ele geçirilse bile).
+  const UPD_PUB = 'MCowBQYDK2VwAyEAQ2hmI6jjo0OCB8XDNyCTvQdjbQNETbUP4OZ5/CazQBI=';
+  const sigText = j => ['nabiz', j.version || '', (j.sha256 || '').toLowerCase(), j.panel || ''].join('|');
+  function manifestOk(j) {
+    try {
+      if (!j || !j.sig || !/^[0-9a-f]{64}$/i.test(j.sha256 || '')) return false;
+      const key = require('crypto').createPublicKey({ key: Buffer.from(UPD_PUB, 'base64'), format: 'der', type: 'spki' });
+      return require('crypto').verify(null, Buffer.from(sigText(j)), key, Buffer.from(j.sig, 'base64'));
+    } catch { return false; }
+  }
+  const sha256 = buf => require('crypto').createHash('sha256').update(buf).digest('hex');
+  // paketi indir: önce asıl adres, olmazsa yedek; özet imzalı özetle aynı değilse reddet
+  async function downloadVerified(j, base) {
+    for (const u of [j.zip ? direct(j.zip) : base + '/nabiz-guncelleme.zip', j.zipAlt && direct(j.zipAlt)].filter(Boolean)) {
       try {
-        const r = await fetch(srcManifest(b), { cache: 'no-store', signal: AbortSignal.timeout(15000) }); if (!r.ok) continue;
-        const j = await r.json(); if (!j || !j.version) continue;
-        if (needPanel && !j.panel) continue;
-        return { j, base: String(b).replace(/\/$/, '') };
+        const r = await fetch(u, { cache: 'no-store', signal: AbortSignal.timeout(120000) }); if (!r.ok) continue;
+        const buf = Buffer.from(await r.arrayBuffer());
+        if (sha256(buf) === String(j.sha256).toLowerCase()) return buf;
       } catch {}
     }
     return null;
   }
+  async function fetchManifest(needPanel) {
+    // tüm kaynaklara birlikte sor; imzası geçerli olanlar içinden en yeni sürümü seç (biri eski kalsa da sorun olmaz)
+    const res = await Promise.all(updateSources().map(async b => {
+      try {
+        const r = await fetch(srcManifest(b), { cache: 'no-store', signal: AbortSignal.timeout(15000) }); if (!r.ok) return null;
+        const j = await r.json(); if (!j || !j.version || !manifestOk(j)) return null;
+        if (needPanel && !j.panel) return null;
+        return { j, base: String(b).replace(/\/$/, '') };
+      } catch { return null; }
+    }));
+    let best = null;
+    for (const m of res) if (m && (!best || newer(m.j.version, best.j.version))) best = m;
+    return best;
+  }
+
   try { cfg = { ...cfg, ...JSON.parse(fs.readFileSync(cfgFile, 'utf8')) }; } catch {}
   const saveCfg = () => { try { fs.writeFileSync(cfgFile, JSON.stringify(cfg)); } catch {} };
 
@@ -343,12 +372,9 @@ function run() {
     try {
       const m = await fetchManifest(); if (!m) return; const j = m.j;
       if (!newer(j.version, installedVersion)) return;
-      let zr = await fetch(j.zip ? direct(j.zip) : m.base + '/nabiz-guncelleme.zip', { cache: 'no-store' }).catch(() => null);
-      if ((!zr || !zr.ok) && j.zipAlt) zr = await fetch(direct(j.zipAlt), { cache: 'no-store' }).catch(() => null);
-      if (!zr) return;
-      if (!zr.ok) return;
+      const buf = await downloadVerified(j, m.base); if (!buf) return;
       const f = path.join(app.getPath('temp'), 'nabiz-guncelleme.zip');
-      fs.writeFileSync(f, Buffer.from(await zr.arrayBuffer()));
+      fs.writeFileSync(f, buf);
       await applyUpdate(f, true);
     } catch {} finally { silentBusy = false; }
   }
@@ -362,11 +388,7 @@ function run() {
       if (!newer(j.version, installedVersion)) { if (manual) dialog.showMessageBox({ type: 'info', title: 'Nabız', message: installedVersion !== VERSION ? `Nabız ${installedVersion} sürümü yüklendi; müzik durunca kendiliğinden devreye girecek.` : `En güncel sürümü kullanıyorsun (${VERSION}).` }); return { ok: false }; }
       const r = await dialog.showMessageBox({ type: 'question', buttons: ['Şimdi güncelle', 'Sonra'], defaultId: 0, title: 'Nabız', message: `Yeni sürüm var: ${j.version}`, detail: j.notes || '' });
       if (r.response !== 0) return { ok: false };
-      let zr = await fetch(j.zip ? direct(j.zip) : base + '/nabiz-guncelleme.zip', { cache: 'no-store' }).catch(() => null);
-      if ((!zr || !zr.ok) && j.zipAlt) zr = await fetch(direct(j.zipAlt), { cache: 'no-store' }).catch(() => null);
-      if (!zr) throw new Error('Güncelleme dosyası indirilemedi');
-      if (!zr.ok) throw new Error('Güncelleme dosyası indirilemedi (HTTP ' + zr.status + ')');
-      const buf = Buffer.from(await zr.arrayBuffer());
+      const buf = await downloadVerified(j, base); if (!buf) throw new Error('Güncelleme dosyası indirilemedi ya da doğrulanamadı (imza/özet tutmuyor)');
       const f = path.join(app.getPath('temp'), 'nabiz-guncelleme.zip');
       fs.writeFileSync(f, buf);
       return applyUpdate(f);

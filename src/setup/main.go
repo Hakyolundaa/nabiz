@@ -7,6 +7,7 @@ import (
 	"archive/zip"
 	"embed"
 	"encoding/binary"
+	"encoding/json"
 	"fmt"
 	"io"
 	"io/fs"
@@ -625,8 +626,30 @@ func uninstall() {
 	regDeleteTree(uninstSubKey)
 	regDeleteValue(runSubKey, "electron.app.Nabız")
 	if !keepData {
+		// yönetici paneli ayarları (bot anahtarı, kanal) veriler silinse de korunur
+		keep := map[string]any{}
+		for _, d := range []string{"Nabız", "nabiz"} {
+			if b, err := os.ReadFile(filepath.Join(os.Getenv("APPDATA"), d, "ayarlar.json")); err == nil {
+				var m map[string]any
+				if json.Unmarshal(b, &m) == nil {
+					for _, k := range []string{"adminToken", "adminChannel", "admin"} {
+						if v, ok := m[k]; ok && v != nil && v != "" {
+							keep[k] = v
+						}
+					}
+				}
+			}
+		}
 		os.RemoveAll(filepath.Join(os.Getenv("APPDATA"), "Nabız"))
 		os.RemoveAll(filepath.Join(os.Getenv("APPDATA"), "nabiz"))
+		if len(keep) > 0 {
+			dir := filepath.Join(os.Getenv("APPDATA"), "Nabız")
+			if os.MkdirAll(dir, 0755) == nil {
+				if b, err := json.Marshal(keep); err == nil {
+					os.WriteFile(filepath.Join(dir, "ayarlar.json"), b, 0644)
+				}
+			}
+		}
 	}
 	dest := destDir()
 	// Bu program klasörün içinden çalıştığı için silme işini kapandıktan sonra yaptır
