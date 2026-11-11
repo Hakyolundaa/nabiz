@@ -223,18 +223,64 @@ function run() {
 
   // ---------- Telefondan kumanda adresleri ----------
   function remoteUrls() {
-    const port = server.remotePort && server.remotePort();
-    if (!cfg.remote || !port) return [];
-    const nets = require('os').networkInterfaces(), out = [];
-    for (const name in nets) for (const n of nets[name] || []) {
-      if (n.family !== 'IPv4' && n.family !== 4) continue;
-      if (n.internal || /^169\.254\./.test(n.address)) continue;
-      const pri = /^192\.168\./.test(n.address) ? 0 : /^10\./.test(n.address) ? 1 : /^172\.(1[6-9]|2\d|3[01])\./.test(n.address) ? 2 : 3;
-      if (/vEthernet|VirtualBox|VMware|Hyper-V|WSL|Loopback|Tailscale|ZeroTier|Radmin|Hamachi|VPN|TAP|TUN|WireGuard|Wintun|OpenVPN|Proton|Nord|Mullvad|Surfshark|Cloudflare|WARP|Npcap|Bluetooth/i.test(name)) continue;
-      out.push({ pri, url: `http://${n.address}:${port}/k/${cfg.remoteToken}`, name });
-    }
-    return out.sort((a, b) => a.pri - b.pri).map(x => x.url);
+    if (!cfg.remote || !cfg.remoteToken) return [];
+    return [`https://hakyolundaa.github.io/nabiz/kumanda.html#k=${cfg.remoteToken}`];
   }
+  // ---------- Telefondan kumanda: internet üzerinden (ntfy.sh aktarıcısı) ----------
+  // Telefon ↔ bilgisayar mesajları, bu bilgisayara özel tahmin edilemez kanaldan geçer:
+  //   nbz-<anahtar>-c : telefondan gelen komutlar (çal/durdur/ileri/geri/ses/sar)
+  //   nbz-<anahtar>-s : bilgisayardan giden durum (şarkı adı, sanatçı, kapak, çalıyor mu, konum, ses)
+  // Dinleme geçmişi, listeler vb. hiçbir şey gönderilmez. Wi-Fi / güvenlik duvarı gerekmez.
+  const RELAY = 'https://ntfy.sh/';
+  let relayCtl = null, relayState = null, relaySentKey = '', relayLastPub = 0, relayTimer = null;
+  const relayTopic = () => 'nbz-' + cfg.remoteToken;
+  function relayStop() { try { relayCtl && relayCtl.abort(); } catch {} relayCtl = null; clearTimeout(relayTimer); }
+  function relayStart() {
+    relayStop();
+    if (!cfg.remote || !/^[0-9a-f]{24}$/.test(cfg.remoteToken || '')) return;
+    const ctl = new AbortController(); relayCtl = ctl;
+    (async () => {
+      let wait = 2000;
+      while (!ctl.signal.aborted) {
+        try {
+          const r = await fetch(RELAY + relayTopic() + '-c/json', { signal: ctl.signal });
+          if (!r.ok || !r.body) throw new Error('HTTP ' + r.status);
+          wait = 2000;
+          const rd = r.body.getReader(), dec = new TextDecoder(); let buf = '';
+          for (;;) {
+            const { value, done } = await rd.read(); if (done) break;
+            buf += dec.decode(value, { stream: true }); let i;
+            while ((i = buf.indexOf('\n')) >= 0) {
+              const line = buf.slice(0, i); buf = buf.slice(i + 1);
+              try {
+                const e = JSON.parse(line); if (e.event !== 'message') continue;
+                const m = JSON.parse(e.message);
+                if (!m || Math.abs(Date.now() - (+m.t || 0)) > 120000) continue;   // eski/gecikmiş komutları yok say
+                if (m.cmd === 'hello') { relayPublish(true); continue; }
+                if (['toggle', 'next', 'prev', 'seek', 'vol', 'volset'].includes(m.cmd)) server.sendCmd(m.cmd, m.v);
+              } catch {}
+            }
+          }
+        } catch {}
+        if (ctl.signal.aborted) break;
+        await new Promise(r => setTimeout(r, wait)); wait = Math.min(wait * 2, 60000);
+      }
+    })();
+    relayPublish(true);
+  }
+  function relayPublish(force) {
+    if (!cfg.remote || !relayCtl) return;
+    const st = relayState || {};
+    const has = !!(st.has && !st.priv);
+    const msg = has ? { has: true, title: st.title || '', artist: st.artist || '', thumb: st.thumb || '', playing: !!st.playing, pos: +st.pos || 0, dur: +st.dur || 0, vol: st.vol, acc: st.acc } : { has: false, vol: st.vol };
+    const key = JSON.stringify([msg.has, msg.title, msg.artist, msg.playing, Math.round((msg.vol || 0) / 2)]);
+    if (!force && key === relaySentKey) return;
+    const gap = Date.now() - relayLastPub;
+    if (gap < 3000) { clearTimeout(relayTimer); relayTimer = setTimeout(() => relayPublish(force), 3000 - gap); return; }
+    relaySentKey = key; relayLastPub = Date.now();
+    fetch(RELAY + relayTopic() + '-s', { method: 'POST', body: JSON.stringify({ ...msg, t: Date.now() }) }).catch(() => {});
+  }
+
 
   // ---------- Adayı aç/kapat + kısayol tuşu ----------
   var islandAutoHidden = false;
@@ -450,6 +496,7 @@ function run() {
       try { return restoreFrom(file); } catch (e) { dialog.showErrorBox('Nabız', e.message); return { ok: false }; }
     });
     server.onState(st => {
+      relayState = st; relayPublish(false);
       presence.update(st && st.priv ? { ...st, has: false } : st);
       const songKey = st && st.has ? (st.title || '') + '|' + (st.artist || '') : '';
       if (songKey && songKey !== lastSongKey) { lastSongKey = songKey; bumpIsland(); }
@@ -492,13 +539,13 @@ function run() {
     ipcMain.handle('version', () => VERSION);
     ipcMain.handle('remote', async (_e, on, renew) => {
       cfg.remote = !!on;
-      if (renew || !cfg.remoteToken) cfg.remoteToken = require('crypto').randomBytes(12).toString('hex');
+      if (renew || !/^[0-9a-f]{24}$/.test(cfg.remoteToken || '')) cfg.remoteToken = require('crypto').randomBytes(12).toString('hex');
       saveCfg();
-      if (cfg.remote) { const p = await server.startRemote(cfg.remoteToken); if (!p) { cfg.remote = false; saveCfg(); return { ok: false, error: 'Kumanda başlatılamadı (port kullanımda).' }; } }
-      else server.stopRemote();
+      server.stopRemote();               // eski yerel ağ kumandası artık kullanılmıyor
+      if (cfg.remote) relayStart(); else relayStop();
       return { ok: true, urls: remoteUrls() };
     });
-    if (cfg.remote && cfg.remoteToken) server.startRemote(cfg.remoteToken);
+    if (cfg.remote) relayStart();
     // şarkı değişince Windows bildirimi (kapakla birlikte)
     try {
       if (process.platform === 'win32') {

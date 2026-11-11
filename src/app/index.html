@@ -1735,7 +1735,7 @@ async function openSettings(){
       <div class="set-r"><div><b>Ne çalsın</b></div><div class="alarmrow"><select id="alSrc">${alarmSources().map(([v,n])=>`<option value="${esc(v)}" ${settings.alarm.src===v?'selected':''}>${esc(n)}</option>`).join('')}</select></div></div>
     </div>
     ${desk?`<div class="set-s"><h4>Telefondan kumanda</h4>
-      ${R('Telefondan kontrol et','Aynı Wi-Fi\'daki telefonundan QR kodla Nabız\'ı yönet. Sadece QR kodu okutan telefon bağlanabilir.',`<button class="btn ghost" data-remote style="padding:8px 14px">${desk.remote?'QR kodu göster':'Aç ve QR göster'}</button>`)}
+      ${R('Telefondan kontrol et','Telefonundan QR kodla Nabız\'ı yönet; aynı Wi-Fi şart değil, internet yeter. Sadece QR kodu okutan telefon bağlanabilir.',`<button class="btn ghost" data-remote style="padding:8px 14px">${desk.remote?'QR kodu göster':'Aç ve QR göster'}</button>`)}
     </div>`:''}
     <div class="set-s"><h4>Discord</h4>
       ${R('Discord\'da dinlediğimi göster','Profilinde "Dinliyor: şarkı — sanatçı" olarak kapağıyla görünür. Discord masaüstü uygulaması açık olmalı.',SW('discord',desk.discord,'desk'))}
@@ -2768,7 +2768,7 @@ function guideHTML(){
       '<b>Görünüm:</b> Ayarlar → Masaüstü adası: konum, boyut, plak animasyonu, ada üstünde şarkı sözü.']]]:[]),
     ['dah',I.more,'Daha fazlası',[
       '<b>Mini oynatıcı:</b> Alttaki çubuğun sağındaki küçük pencere düğmesi; Nabız her şeyin üstünde küçük bir oynatıcıya dönüşür.',
-      ...(desk?['<b>Telefondan kumanda:</b> Ayarlar → Telefondan kumanda. QR kodu okut; aynı Wi-Fi\'da telefondan çal/durdur/ses.','<b>Müzikli alarm:</b> Seçtiğin saatte sesi yavaşça açarak uyandırır.','<b>Discord:</b> Discord profilinde “Dinliyor: …” görünür (Ayarlar → Discord).']:[]),
+      ...(desk?['<b>Telefondan kumanda:</b> Ayarlar → Telefondan kumanda. QR kodu okut; telefondan çal/durdur/ileri/ses. Wi-Fi şart değil, internet yeter.','<b>Müzikli alarm:</b> Seçtiğin saatte sesi yavaşça açarak uyandırır.','<b>Discord:</b> Discord profilinde “Dinliyor: …” görünür (Ayarlar → Discord).']:[]),
       '<b>Uyku zamanlayıcısı:</b> Alttaki çubuktaki ay simgesi; belli bir süre sonra ya da şarkı bitince müziği durdurur.',
       '<b>Geçmiş & Özet:</b> Ne kadar dinlediğin, en sevdiklerin, rozetlerin, 🔥 serin ve yıl sonu Wrapped.',
       '<b>Gizli oturum:</b> Sol alttaki maske; açıkken dinlediklerin kaydedilmez.',
@@ -3612,7 +3612,7 @@ async function openRemote(){
     m.innerHTML=`<div class="box" style="width:min(560px,94vw)"><h3>Telefondan kumanda</h3>
       ${url&&!fw.ok?`<div class="fwnote" style="margin-bottom:12px"><b>Telefon bağlanamayabilir</b><span>Windows Güvenlik Duvarı telefonun Nabız'a bağlanmasını engelliyor (telefonda siyah/boş ekran). Tek seferlik izin ver; Windows sorunca <b>Evet</b> de.</span><div style="margin-top:8px"><button class="btn" data-fwfix>İzin ver</button></div></div>`:''}
       ${!r||!r.ok?`<p>${esc(r&&r.error||'Kumanda başlatılamadı.')}</p>`:!url?`<p>Bilgisayar bir Wi-Fi ya da ağa bağlı görünmüyor.</p>`:
-      `<div class="qrbox"><div class="qr" id="qrc"></div><div class="qrinfo">Telefonun kamerasıyla QR kodu okut, açılan sayfadan Nabız'ı kontrol et.<br><b style="color:var(--text)">Telefon aynı Wi-Fi'da olmalı.</b><br>Windows "erişime izin ver" diye sorarsa <b style="color:var(--text)">Özel ağlar</b>'a izin ver.<code>${esc(url)}</code></div></div>
+      `<div class="qrbox"><div class="qr" id="qrc"></div><div class="qrinfo">Telefonun kamerasıyla QR kodu okut, açılan sayfadan Nabız'ı kontrol et.<br><b style="color:var(--text)">Telefonun internete bağlı olması yeter</b>, aynı Wi-Fi şart değil; mobil veride de çalışır.<br><span style="font-size:12px">Komutlar ve çalan şarkı bilgisi bu bilgisayara özel bir kanaldan (ntfy.sh) geçer. Linki kimseyle paylaşma; paylaştıysan “Yeni bağlantı”ya bas.</span><code>${esc(url)}</code></div></div>
       ${r.urls.length>1?`<p style="margin:8px 0 0">Açılmazsa diğer adresleri dene: ${r.urls.slice(1).map(u=>`<code style="display:inline;padding:2px 6px;background:rgba(255,255,255,.06);border-radius:6px">${esc(u)}</code>`).join(' ')}</p>`:''}`}
       <div class="act" style="margin-top:16px;justify-content:space-between"><div style="display:flex;gap:8px"><button class="btn ghost" data-off>Kumandayı kapat</button><button class="btn ghost" data-renew title="Eski QR kodlar artık çalışmaz">Yeni bağlantı</button></div><button class="btn" data-x>Tamam</button></div></div>`;
     if(url){ try{ const QR=await loadQR(); new QR(m.querySelector('#qrc'),{text:url,width:180,height:180,correctLevel:QR.CorrectLevel.M}) }catch{ m.querySelector('#qrc').innerHTML='<span style="color:#000;font-size:12px;text-align:center">QR yüklenemedi —<br>adresi telefona yaz</span>' } }
