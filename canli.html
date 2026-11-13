@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Nabız — Canlı söz kartı</title>
+<meta name="robots" content="noindex">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0}
+html,body{min-height:100%}
+body{background:#060608;color:#fff;font-family:Outfit,system-ui,sans-serif;display:flex;flex-direction:column;align-items:center;gap:20px;padding:max(16px,env(safe-area-inset-top)) 12px 40px;-webkit-font-smoothing:antialiased}
+.card{position:relative;width:min(420px,94vw);aspect-ratio:9/16;border-radius:34px;overflow:hidden;box-shadow:0 40px 100px rgba(0,0,0,.6);isolation:isolate;background:#111}
+canvas.bg{position:absolute;inset:0;width:100%;height:100%;z-index:-2}
+.grain{position:absolute;inset:-50%;z-index:-1;opacity:.12;pointer-events:none;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");animation:grain 1s steps(6) infinite}
+@keyframes grain{0%{transform:translate(0,0)}25%{transform:translate(-4%,3%)}50%{transform:translate(3%,-5%)}75%{transform:translate(-6%,-2%)}100%{transform:translate(0,0)}}
+.glass{background:rgba(255,255,255,.12);backdrop-filter:blur(24px) saturate(1.6);-webkit-backdrop-filter:blur(24px) saturate(1.6);border:1px solid rgba(255,255,255,.28);box-shadow:inset 0 1px 0 rgba(255,255,255,.45),0 10px 30px rgba(0,0,0,.18)}
+.vid{position:absolute;left:16px;right:16px;top:16px;aspect-ratio:16/9;border-radius:22px;overflow:hidden;padding:0}
+.vid #yt,.vid iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.meta{position:absolute;left:24px;right:24px;top:calc((min(420px,94vw) - 32px)*9/16 + 30px);display:flex;justify-content:space-between;align-items:baseline;gap:10px}
+.meta b{font-size:17px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.meta i{font-style:normal;font-size:14px;opacity:.7;white-space:nowrap}
+.meta .tm{font-size:14px;font-weight:600;opacity:.85;font-variant-numeric:tabular-nums}
+.lyr{position:absolute;left:24px;right:24px;top:58%;transform:translateY(-50%);font-weight:700;font-size:clamp(23px,7vw,30px);line-height:1.18;letter-spacing:-.02em}
+.ln{display:block;margin:.12em 0;transition:opacity .5s,filter .5s}
+.w{display:inline-block;opacity:0;filter:blur(10px);transform:translateY(14px);background:linear-gradient(90deg,#fff 50%,rgba(255,255,255,.4) 50%);background-size:200% 100%;background-position:100% 0;-webkit-background-clip:text;background-clip:text;color:transparent;transition:background-position .3s linear}
+.in .w{animation:wIn .7s cubic-bezier(.2,.8,.2,1) forwards}
+@keyframes wIn{to{opacity:1;filter:blur(0);transform:none}}
+.w.lit{background-position:0 0;text-shadow:0 0 22px rgba(255,255,255,.35)}
+.ln.past{opacity:.45}
+.pulse{position:absolute;left:0;right:0;bottom:96px;height:54px;width:100%;opacity:0;transition:opacity .6s}
+.playing .pulse{opacity:1}
+.btn{position:absolute;left:50%;transform:translateX(-50%);bottom:22px;height:52px;padding:0 22px;white-space:nowrap;border-radius:999px;display:flex;align-items:center;justify-content:center;gap:12px;font:600 17px Outfit,sans-serif;color:#fff;cursor:pointer;transition:transform .15s;overflow:hidden}
+.btn.hint{animation:hint 1.6s ease-in-out infinite}@keyframes hint{50%{box-shadow:inset 0 1px 0 rgba(255,255,255,.45),0 0 0 8px rgba(255,255,255,.12)}}.card{cursor:pointer}
+.btn .pl{width:40px;height:40px;border-radius:50%;background:#fff;display:grid;place-items:center;flex:none}
+.btn .pl svg{width:15px;height:15px;fill:#111}
+.btn .bar{position:absolute;left:0;bottom:0;height:3px;background:#fff;width:0}
+.brand{position:absolute;right:22px;bottom:86px;font:700 12px Outfit,sans-serif;opacity:.7;display:flex;align-items:center;gap:6px}
+.brand i{display:inline-flex;gap:2px;align-items:flex-end;height:12px}.brand i u{display:block;width:3px;background:#fff;border-radius:2px}
+.flash{position:absolute;inset:0;background:radial-gradient(circle at 50% 60%,rgba(255,255,255,.5),transparent 60%);opacity:0;pointer-events:none;z-index:3}
+.flash.go{animation:fl .9s ease-out}@keyframes fl{0%{opacity:.9}100%{opacity:0}}
+.msg{position:absolute;left:24px;right:24px;top:58%;transform:translateY(-50%);text-align:center;opacity:.8;font-size:16px;line-height:1.5}
+.pick{width:min(420px,94vw)}
+.pick h3{font-size:15px;font-weight:600;margin:0 4px 10px;opacity:.85}
+.pick .list{max-height:300px;overflow:auto;border-radius:18px;background:#121217;padding:6px}
+.pick button{display:flex;gap:12px;width:100%;text-align:left;background:none;border:0;color:#cfcfd6;font:500 15px Outfit,sans-serif;padding:10px 12px;border-radius:12px;cursor:pointer}
+.pick button em{font-style:normal;opacity:.5;font-variant-numeric:tabular-nums;min-width:38px}
+.pick button.on{background:#2a2a33;color:#fff}
+.foot{font-size:12.5px;opacity:.5;text-align:center;max-width:420px;line-height:1.5}
+</style></head><body>
+<div class="card" id="card">
+  <canvas class="bg" id="bg"></canvas><div class="grain"></div>
+  <div class="vid glass"><div id="yt"></div></div>
+  <div class="meta"><div style="min-width:0"><b id="ti">…</b><br><i id="ar"></i></div><span class="tm" id="tm"></span></div>
+  <div class="lyr" id="lyr"></div><div class="msg" id="msg">Sözler yükleniyor…</div>
+  <canvas class="pulse" id="pulse"></canvas>
+  <div class="brand"><i><u style="height:6px"></u><u style="height:12px"></u><u style="height:8px"></u><u style="height:11px"></u></i>Nabız</div>
+  <div class="btn glass" id="play"><span id="bt">Hazırlanıyor…</span><span class="bar" id="pbar"></span></div>
+  <div class="flash" id="flash"></div>
+</div>
+<div class="pick"><h3>Başka bir sözü seç</h3><div class="list" id="list"></div></div>
+<p class="foot">Bu canlı söz kartı <a href="https://github.com/Hakyolundaa/nabiz/releases/latest" style="color:#fff">Nabız</a> ile oluşturuldu · Müzik YouTube oynatıcısından çalar. Tarayıcılar ilk dokunuştan önce sesli çalmaya izin vermediği için müzik sessiz başlar; karta dokun.</p>
+<script>
+/* -------- veri: Nabız'dan gelen #d=… (sözler + zamanlar hazır) ya da deneme için #v=…&a=…&t=…&s=… -------- */
+const H=location.hash.slice(1); let D=null;
+if(H.startsWith('d=')){ try{ const b=H.slice(2).replace(/-/g,'+').replace(/_/g,'/'); D=JSON.parse(new TextDecoder().decode(Uint8Array.from(atob(b+'==='.slice((b.length+3)%4)),c=>c.charCodeAt(0)))) }catch{} }
+const Q=Object.fromEntries(new URLSearchParams(D?'':H));
+const VID=String((D&&D.v)||Q.v||'lDpXhLzJQsA').replace(/[^\w-]/g,'').slice(0,11), ART=String((D&&D.a)||Q.a||'Motive').slice(0,80), TIT=String((D&&D.t)||Q.t||'YIN YANG').slice(0,100), N=Math.min(4,Math.max(1,+Q.n||2));
+let START=Q.s!=null?+Q.s:null;
+document.getElementById('ti').textContent=TIT; document.getElementById('ar').textContent=ART;
+const $=id=>document.getElementById(id), card=$('card'), lyr=$('lyr');
+const fmt=s=>Math.floor(s/60)+':'+String(Math.floor(s%60)).padStart(2,'0');
+
+/* -------- renkler: kapaktan -------- */
+let pal=['#120d1a','#5b3fd1','#e46fb0','#f6c1d8'];
+function rgb2hsl([r,g,b]){ r/=255;g/=255;b/=255; const mx=Math.max(r,g,b),mn=Math.min(r,g,b); let h=0,s=0,l=(mx+mn)/2; if(mx!==mn){ const d=mx-mn; s=l>.5?d/(2-mx-mn):d/(mx+mn); h=mx===r?(g-b)/d+(g<b?6:0):mx===g?(b-r)/d+2:(r-g)/d+4; h/=6 } return [h,s,l] }
+function hsl2hex([h,s,l]){ const f=n=>{ const k=(n+h*12)%12, a=s*Math.min(l,1-l); return Math.round(255*(l-a*Math.max(-1,Math.min(k-3,9-k,1)))).toString(16).padStart(2,'0') }; return '#'+f(0)+f(8)+f(4) }
+const im=new Image(); im.crossOrigin='anonymous'; im.src=`https://i.ytimg.com/vi/${VID}/hqdefault.jpg`;
+im.onload=()=>{ try{ const c=document.createElement('canvas'); c.width=32; c.height=24; const x=c.getContext('2d'); x.drawImage(im,0,45,480,270,0,0,32,24); const d=x.getImageData(0,0,32,24).data; const B={};
+  for(let i=0;i<d.length;i+=4){ const [h,s,l]=rgb2hsl([d[i],d[i+1],d[i+2]]); if(s<.15||l<.1||l>.92) continue; const k=Math.floor(h*10); (B[k]=B[k]||{n:0,h:0,s:0}); B[k].n++; B[k].h+=h; B[k].s+=s }
+  const top=Object.values(B).sort((a,b)=>b.n-a.n).map(b=>[b.h/b.n,b.s/b.n]);
+  if(top.length){ const [h0,s0]=top[0], [h1,s1]=top[1]||[(h0+.08)%1,s0], [h2]=top[2]||[(h0+.92)%1];
+    pal=[hsl2hex([h0,Math.min(.6,s0),.08]),hsl2hex([h0,Math.max(.6,s0),.48]),hsl2hex([h1,Math.max(.6,s1),.56]),hsl2hex([h2,.7,.7])] } }catch{} };
+
+/* -------- akan zemin + nabız çizgisi -------- */
+const bg=$('bg'), bx=bg.getContext('2d'), pc=$('pulse'), px=pc.getContext('2d');
+const blobs=Array.from({length:5},(_,i)=>({a:Math.random()*6.28,s:.15+Math.random()*.25,r:.55+Math.random()*.35,c:i%3,ox:Math.random(),oy:Math.random()}));
+let beat=0;
+function drawBg(now){ const W=bg.width=bg.clientWidth*1.5, H=bg.height=bg.clientHeight*1.5; bx.fillStyle=pal[0]; bx.fillRect(0,0,W,H); bx.globalCompositeOperation='lighter';
+  blobs.forEach(b=>{ const t=now/1000*b.s+b.a, X=W*(.5+.38*Math.sin(t+b.ox*6)), Y=H*(.5+.4*Math.cos(t*.8+b.oy*6)), R=W*b.r*(1+beat*.12); const g=bx.createRadialGradient(X,Y,0,X,Y,R), c=pal[1+b.c]; g.addColorStop(0,c+'bb'); g.addColorStop(1,c+'00'); bx.fillStyle=g; bx.fillRect(0,0,W,H) });
+  bx.globalCompositeOperation='source-over'; bx.fillStyle='rgba(0,0,0,.25)'; bx.fillRect(0,0,W,H) }
+function drawPulse(now){ const W=pc.width=pc.clientWidth*2, H=pc.height=pc.clientHeight*2; px.clearRect(0,0,W,H); px.strokeStyle='rgba(255,255,255,.85)'; px.lineWidth=3; px.shadowColor='#fff'; px.shadowBlur=12; px.beginPath();
+  const sp=(now/1000*240)%W; for(let x=0;x<=W;x+=4){ const k=(((x-sp)%W+W)%W)/W; let y=H/2; if(k>.42&&k<.58){ const u=(k-.42)/.16; y=H/2-Math.sin(u*Math.PI*3)*H*.42*Math.sin(u*Math.PI)*(.45+beat*.8) } x?px.lineTo(x,y):px.moveTo(x,y) } px.stroke() }
+
+/* -------- sözler: LRCLIB -------- */
+let LINES=[], SEL=[], END=0;
+async function loadLyrics(){
+  const tries=[`https://lrclib.net/api/get?artist_name=${encodeURIComponent(ART)}&track_name=${encodeURIComponent(TIT)}`,`https://lrclib.net/api/search?q=${encodeURIComponent(ART+' '+TIT)}`];
+  for(const u of tries){ try{ const r=await fetch(u); if(!r.ok) continue; let j=await r.json(); if(Array.isArray(j)) j=j.find(o=>o.syncedLyrics)||null; if(j&&j.syncedLyrics){ return j.syncedLyrics.split('\n').map(l=>{ const m=l.match(/^\[(\d+):(\d+(?:\.\d+)?)\]\s*(.*)$/); return m?{t:+m[1]*60+ +m[2],s:m[3].trim()}:null }).filter(o=>o&&o.s) } }catch{} }
+  return [] }
+function choose(i){ SEL=LINES.slice(i,i+N); const nx=LINES[i+N]; END=nx?nx.t-.15:SEL[SEL.length-1].t+5; START=SEL[0].t;
+  $('tm').textContent=fmt(START); $('pbar').style.width='0'; if(ready) hint();
+  document.querySelectorAll('#list button').forEach((b,k)=>b.classList.toggle('on',k>=i&&k<i+N)); build() }
+function build(){ lyr.innerHTML=''; SEL.forEach((l,li)=>{ const d=document.createElement('span'); d.className='ln'; l.s.split(/\s+/).forEach((w,wi)=>{ const s=document.createElement('span'); s.className='w'; s.textContent=w; s.style.animationDelay=(li*.3+wi*.06)+'s'; d.append(s,document.createTextNode(' ')) }); lyr.append(d) }); requestAnimationFrame(()=>requestAnimationFrame(()=>lyr.querySelectorAll('.ln').forEach(l=>l.classList.add('in')))) }
+
+/* -------- YouTube: sessiz otomatik başlar, dokununca ses açılır -------- */
+let P=null, ready=false, playing=false, sound=false;
+window.onYouTubeIframeAPIReady=()=>{ P=new YT.Player('yt',{videoId:VID,playerVars:{playsinline:1,rel:0,modestbranding:1,controls:0,disablekb:1,autoplay:1,mute:1},
+  events:{onReady:()=>{ ready=true; P.mute(); begin() },onError:()=>{ ready=false; $('bt').textContent='YouTube’da aç · '+fmt(START||0); $('play').dataset.ext='1'; $('play').classList.remove('hint') }}}) };
+const s=document.createElement('script'); s.src='https://www.youtube.com/iframe_api'; document.head.append(s);
+function hint(){ const b=$('play'); if(b.dataset.ext) return; b.classList.toggle('hint',!sound); $('bt').textContent=sound?'🔊 '+fmt(START)+' anından çalıyor':'🔇 Sesi açmak için dokun' }
+function begin(){ if(!ready||!SEL.length) return; restart(); hint() }
+function restart(){ lyr.querySelectorAll('.w').forEach(w=>w.classList.remove('lit')); lyr.querySelectorAll('.ln').forEach(l=>l.classList.remove('past'));
+  P.seekTo(Math.max(0,START-.25),true); P.playVideo(); playing=true; card.classList.add('playing');
+  const f=$('flash'); f.classList.remove('go'); void f.offsetWidth; f.classList.add('go') }
+card.addEventListener('click',()=>{
+  if($('play').dataset.ext){ open(`https://www.youtube.com/watch?v=${VID}&t=${Math.floor(START||0)}s`,'_blank'); return }
+  if(!ready) return;
+  if(!sound){ sound=true; P.unMute(); P.setVolume(100); restart(); hint(); return }
+  if(P.getPlayerState()===1){ P.pauseVideo(); playing=false; card.classList.remove('playing'); $('bt').textContent='⏸ Devam etmek için dokun' } else { P.playVideo(); playing=true; card.classList.add('playing'); hint() } });
+
+/* -------- döngü -------- */
+let lastBeat=0;
+function loop(now){ drawBg(now); beat*=.93;
+  if(playing&&P&&P.getCurrentTime){ const t=P.getCurrentTime(); if(now-lastBeat>470){ lastBeat=now; beat=1 } drawPulse(now);
+    $('tm').textContent=fmt(t); $('pbar').style.width=Math.min(100,Math.max(0,(t-START)/(END-START)*100))+'%';
+    const ws=[...lyr.querySelectorAll('.w')]; let k=0;
+    SEL.forEach((l,li)=>{ const n=l.s.split(/\s+/).length, nt=(SEL[li+1]?SEL[li+1].t:END), dur=Math.max(.8,(nt-l.t)*.85); for(let j=0;j<n;j++,k++) if(ws[k]) ws[k].classList.toggle('lit',t>=l.t+dur*j/n); if(lyr.children[li]) lyr.children[li].classList.toggle('past',!!SEL[li+1]&&t>SEL[li+1].t+.2) });
+    if(t>=END) restart() }
+  requestAnimationFrame(loop) }
+requestAnimationFrame(loop);
+
+(async()=>{
+  if(D&&Array.isArray(D.l)&&Array.isArray(D.ts)&&D.l.length){
+    // Nabız'dan gelen kart: sadece seçilen sözler
+    LINES=D.l.slice(0,4).map((x,i)=>({s:String(x).slice(0,200),t:Math.max(0,+D.ts[i]||0)}));
+    $('msg').remove(); document.querySelector('.pick').remove();
+    SEL=LINES; START=LINES[0].t; END=+D.e>START?+D.e:LINES[LINES.length-1].t+5; $('tm').textContent=fmt(START); build(); begin(); return }
+  LINES=await loadLyrics();
+  if(!LINES.length){ $('msg').textContent='Bu şarkının zamanlı sözleri bulunamadı.'; $('bt').textContent='—'; return }
+  $('msg').remove();
+  $('list').innerHTML=LINES.map((l,i)=>`<button data-i="${i}"><em>${fmt(l.t)}</em><span></span></button>`).join('');
+  document.querySelectorAll('#list button').forEach((b,i)=>{ b.querySelector('span').textContent=LINES[i].s; b.onclick=()=>{ choose(i); if(ready) begin(); card.scrollIntoView({behavior:'smooth',block:'start'}) } });
+  let i=START!=null?Math.max(0,LINES.findIndex(l=>l.t>=START-.5)):Math.max(0,LINES.findIndex(l=>/yin/i.test(l.s))-1);
+  choose(i<0?0:i); begin() })();
+</script></body></html>
