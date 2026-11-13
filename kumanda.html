@@ -30,6 +30,14 @@ body{font-family:-apple-system,"Segoe UI",Roboto,system-ui,sans-serif;background
 .btns .pp{width:78px;height:78px;background:#fff;color:#000;display:grid;place-items:center}
 .btns .pp svg{width:38px;height:38px}
 .vol{display:flex;align-items:center;gap:12px}
+.cover .yt{display:none;width:min(92vw,62vh);aspect-ratio:16/9;border-radius:18px;overflow:hidden;box-shadow:0 20px 50px rgba(0,0,0,.6),0 0 60px -20px var(--acc);background:#000}
+.cover .yt iframe,.cover .yt>div{width:100%;height:100%;border:0}
+.phone .cover img,.phone .cover .ph{display:none!important}.phone .cover .yt{display:block}
+.dev{display:flex;gap:10px}
+.dev button{flex:1;height:48px;border-radius:999px;border:1px solid rgba(255,255,255,.22);background:rgba(255,255,255,.1);color:#fff;font:600 15px -apple-system,"Segoe UI",Roboto,sans-serif;display:flex;align-items:center;justify-content:center;gap:8px;-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px)}
+.dev button:active{transform:scale(.97)}
+.dev button.hide{display:none}
+.tag{font-size:12px;font-weight:700;color:var(--acc);letter-spacing:.3px;min-height:16px}
 .vol svg{width:20px;height:20px;fill:rgba(255,255,255,.7);flex:none}
 .vol input{flex:1;accent-color:var(--acc);height:28px}
 .msg{position:fixed;inset:0;display:none;place-items:center;text-align:center;padding:30px;background:rgba(8,8,10,.85);font-size:15px;line-height:1.6;color:rgba(255,255,255,.8)}
@@ -40,14 +48,16 @@ body{font-family:-apple-system,"Segoe UI",Roboto,system-ui,sans-serif;background
 <div class="bg" id="bg"></div>
 <div class="wrap">
   <div class="top"><span><span class="dot"></span><span id="conn">Bağlanıyor…</span></span><span>Nabız</span></div>
-  <div class="cover"><img id="art" alt="" style="display:none"><div class="ph" id="ph"></div></div>
-  <div class="meta"><b id="title">—</b><span id="artist"></span></div>
+  <div class="cover"><img id="art" alt="" style="display:none"><div class="ph" id="ph"></div><div class="yt"><div id="yt"></div></div></div>
+  <div class="meta"><div class="tag" id="tag"></div><b id="title">—</b><span id="artist"></span></div>
+  <div class="line" id="line"></div>
   <div class="prog"><span id="pos">0:00</span><div class="bar" id="bar"><i id="fill"></i></div><span id="dur">0:00</span></div>
   <div class="btns">
     <button data-c="prev"><svg viewBox="0 0 24 24" style="transform:scaleX(-1)"><path d="M5 6.2v11.6a1 1 0 0 0 1.55.83L15 13v4.5a1 1 0 0 0 1 1h1.5a1 1 0 0 0 1-1v-11a1 1 0 0 0-1-1H16a1 1 0 0 0-1 1V11L6.55 5.37A1 1 0 0 0 5 6.2z"/></svg></button>
     <button data-c="toggle" class="pp" id="pp"></button>
     <button data-c="next"><svg viewBox="0 0 24 24"><path d="M5 6.2v11.6a1 1 0 0 0 1.55.83L15 13v4.5a1 1 0 0 0 1 1h1.5a1 1 0 0 0 1-1v-11a1 1 0 0 0-1-1H16a1 1 0 0 0-1 1V11L6.55 5.37A1 1 0 0 0 5 6.2z"/></svg></button>
   </div>
+  <div class="dev"><button id="toPhone">📱 Telefonda çal</button><button id="toPc" class="hide">💻 Bilgisayara geri ver</button></div>
   <div class="vol"><svg viewBox="0 0 24 24"><path d="M4 9h4l5-5v16l-5-5H4V9z"/></svg><input type="range" id="vol" min="0" max="100" value="80"><svg viewBox="0 0 24 24"><path d="M4 9h4l5-5v16l-5-5H4V9zm12.5 3a4.5 4.5 0 0 0-2.5-4v8a4.5 4.5 0 0 0 2.5-4zM14 3.2v2.1a7 7 0 0 1 0 13.4v2.1a9 9 0 0 0 0-17.6z"/></svg></div>
 </div>
 <div class="msg" id="msg">Nabız'a bağlanılamıyor.<br>Bilgisayarda Nabız açık mı ve kumanda açık mı?<br><span style="font-size:13px;opacity:.7">Nabız → Ayarlar → Telefondan kumanda</span></div>
@@ -71,14 +81,15 @@ function render(){
   if(has&&st.thumb){ $('art').src=st.thumb; $('art').style.display=''; $('ph').style.display='none'; $('bg').style.backgroundImage=`url("${st.thumb}")` }
   else { $('art').style.display='none'; $('ph').style.display=''; $('bg').style.backgroundImage='none' }
   if(has&&st.acc) document.body.style.setProperty('--acc',st.acc);
-  $('pp').innerHTML=has&&st.playing?PAUSE:PLAY;
+  if(phone) renderPP(); else $('pp').innerHTML=has&&st.playing?PAUSE:PLAY;
+  $('toPhone').disabled=!(has&&st.vid); $('toPhone').style.opacity=has&&st.vid?1:.45;
   if(st&&st.vol!=null&&!volDrag) $('vol').value=st.vol;
 }
-(function frame(){ const p=curPos(), d=st&&st.dur||0; $('fill').style.width=(d?p/d*100:0)+'%'; $('pos').textContent=fmt(p); $('dur').textContent=fmt(d); requestAnimationFrame(frame) })();
+(function frame(){ if(phone){ requestAnimationFrame(frame); return } const p=curPos(), d=st&&st.dur||0; $('fill').style.width=(d?p/d*100:0)+'%'; $('pos').textContent=fmt(p); $('dur').textContent=fmt(d); requestAnimationFrame(frame) })();
 if(!K){ $('msg').innerHTML='Bu bağlantı eksik.<br>Nabız → Ayarlar → Telefondan kumanda\'daki QR kodu okut.'; }
 else {
   const es=new EventSource(R+'-s/sse');
-  es.onmessage=e=>{ try{ const d=JSON.parse(e.data); if(d.event&&d.event!=='message') return; const s=JSON.parse(d.message); if(!s||Date.now()-(+s.t||0)>6*3600e3) return; st=s; t0=performance.now(); online=true; lastMsg=Date.now(); render() }catch{} };
+  es.onmessage=e=>{ try{ const d=JSON.parse(e.data); if(d.event&&d.event!=='message') return; const s=JSON.parse(d.message); if(!s||Date.now()-(+s.t||0)>6*3600e3) return; st=s; t0=performance.now(); online=true; lastMsg=Date.now(); render(); onState() }catch{} };
   es.onopen=()=>cmd('hello');
   // durum iste; cevap gelmezse "kapalı" göster
   setInterval(()=>{ cmd('hello'); },40000);
@@ -89,6 +100,38 @@ document.querySelectorAll('[data-c]').forEach(b=>b.onclick=()=>{ cmd(b.dataset.c
 $('bar').addEventListener('pointerdown',e=>{ if(!st||!st.dur) return; const r=e.currentTarget.getBoundingClientRect(); const v=(e.clientX-r.left)/r.width*st.dur; cmd('seek',v); st.pos=v; t0=performance.now() });
 let volT; $('vol').addEventListener('input',e=>{ volDrag=true; clearTimeout(volT); volT=setTimeout(()=>cmd('volset',+e.target.value),250) });
 $('vol').addEventListener('change',e=>{ clearTimeout(volT); cmd('volset',+e.target.value); setTimeout(()=>volDrag=false,1500) });
+
+/* ===== Telefonda çal: şarkı bu telefonda, kaldığı saniyeden çalar ===== */
+var P=null, pReady=false, phone=false, pVid='', LY=[], lyFor='', swAt=0;
+const ytApi=()=>new Promise(res=>{ if(window.YT&&YT.Player) return res(); window.onYouTubeIframeAPIReady=res; const sc=document.createElement('script'); sc.src='https://www.youtube.com/iframe_api'; document.head.append(sc) });
+async function ensurePlayer(){ if(P) return; await ytApi(); await new Promise(res=>{ P=new YT.Player('yt',{playerVars:{playsinline:1,rel:0,modestbranding:1,controls:0},events:{onReady:()=>{ pReady=true; res() },onStateChange:e=>{ if(!phone) return; if(e.data===0) cmd('pnext'); renderPP() },onError:()=>{ if(phone) cmd('pnext') }}}) }) }
+function pTime(){ try{ return P.getCurrentTime()||0 }catch{ return 0 } }
+function pDur(){ try{ return P.getDuration()||0 }catch{ return 0 } }
+function pPlaying(){ try{ return P.getPlayerState()===1 }catch{ return false } }
+function renderPP(){ if(phone) $('pp').innerHTML=pPlaying()?PAUSE:PLAY }
+function setPhone(on){ phone=on; swAt=Date.now(); document.body.classList.toggle('phone',on); $('toPhone').classList.toggle('hide',on); $('toPc').classList.toggle('hide',!on); $('tag').textContent=on?'📱 BU TELEFONDA ÇALIYOR':''; render() }
+async function loadLyrics(){ if(!st||!st.title) return; const key=st.title+'|'+st.artist; if(key===lyFor) return; lyFor=key; LY=[]; $('line').textContent='';
+  const clean=t=>String(t||'').replace(/\(.*?\)|\[.*?\]/g,'').replace(/official|video|lyrics?|audio|klip|şarkı sözleri/ig,'').trim();
+  try{ let j=await fetch(`https://lrclib.net/api/get?artist_name=${encodeURIComponent(clean(st.artist))}&track_name=${encodeURIComponent(clean(st.title))}`).then(r=>r.ok?r.json():null);
+    if(!j||!j.syncedLyrics){ const a=await fetch(`https://lrclib.net/api/search?q=${encodeURIComponent(clean(st.artist)+' '+clean(st.title))}`).then(r=>r.json()); j=(a||[]).find(o=>o.syncedLyrics) }
+    if(j&&j.syncedLyrics&&lyFor===key) LY=j.syncedLyrics.split('\n').map(l=>{ const m=l.match(/^\[(\d+):(\d+(?:\.\d+)?)\]\s*(.*)$/); return m?{t:+m[1]*60+ +m[2],s:m[3].trim()}:null }).filter(o=>o&&o.s) }catch{} }
+async function playOnPhone(v,at){ await ensurePlayer(); pVid=v; P.loadVideoById({videoId:v,startSeconds:Math.max(0,at||0)}); try{ P.setVolume(+$('vol').value||80) }catch{} }
+$('toPhone').onclick=()=>{ if(!st||!st.has||!st.vid){ alert('Bu şarkı telefonda çalınamıyor (YouTube dışı ya da gizli mod).'); return }
+  const at=curPos(); setPhone(true);
+  if(pReady){ pVid=st.vid; P.loadVideoById({videoId:st.vid,startSeconds:Math.max(0,at)}); try{ P.setVolume(+$('vol').value||80) }catch{} }   // dokunuşun içinde başlat (telefonlar sesli çalmaya ancak böyle izin verir)
+  else playOnPhone(st.vid,at);
+  cmd('handoff'); loadLyrics() };
+if(K) ensurePlayer();   // oynatıcıyı önceden hazırla
+$('toPc').onclick=()=>{ const at=pTime(); try{ P.pauseVideo() }catch{} setPhone(false); cmd('takeback',at) };
+// bilgisayardan gelen durum: sıradaki şarkı geldiyse telefonda başlat; bilgisayarda biri çalmaya başladıysa telefonu sustur
+function onState(){ if(!phone) return; if(st.has&&st.vid&&st.vid!==pVid&&pReady){ playOnPhone(st.vid,0); loadLyrics() } if(st.playing&&!st.phone&&Date.now()-swAt>8000){ try{ P.pauseVideo() }catch{} setPhone(false) } }
+// telefondayken düğmeler telefondaki oynatıcıyı yönetir
+document.querySelectorAll('[data-c]').forEach(b=>b.addEventListener('click',e=>{ if(!phone) return; e.stopImmediatePropagation(); const c=b.dataset.c;
+  if(c==='toggle'){ pPlaying()?P.pauseVideo():P.playVideo() } else if(c==='next') cmd('pnext'); else if(c==='prev'){ pTime()>4?P.seekTo(0,true):cmd('pprev') } setTimeout(renderPP,250) },true));
+$('bar').addEventListener('pointerdown',e=>{ if(!phone) return; e.stopImmediatePropagation(); const d=pDur(); if(!d) return; const r=e.currentTarget.getBoundingClientRect(); P.seekTo((e.clientX-r.left)/r.width*d,true) },true);
+$('vol').addEventListener('input',e=>{ if(phone){ e.stopImmediatePropagation(); try{ P.setVolume(+e.target.value) }catch{} } },true);
+$('vol').addEventListener('change',e=>{ if(phone) e.stopImmediatePropagation() },true);
+(function lyLoop(){ if(phone){ const t=pTime(), d=pDur(); $('fill').style.width=(d?t/d*100:0)+'%'; $('pos').textContent=fmt(t); $('dur').textContent=fmt(d); let cur=''; for(const l of LY){ if(l.t<=t+.15) cur=l.s; else break } if($('line').textContent!==cur) $('line').textContent=cur } requestAnimationFrame(lyLoop) })();
 render();
 </script>
 </body>
