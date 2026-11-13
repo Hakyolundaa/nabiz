@@ -1,5 +1,13 @@
 [
  {
+  "version": "2.16.6",
+  "date": "13 Kasım 2026",
+  "title": "Küçük iyileştirmeler",
+  "changes": [
+   "Arka planda küçük düzeltmeler ve iyileştirmeler."
+  ]
+ },
+ {
   "version": "2.16.5",
   "date": "13 Kasım 2026",
   "title": "Canlı söz kartı",

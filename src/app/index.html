@@ -2892,6 +2892,23 @@ async function initAdmin(){
     b.innerHTML=`${I.stats.replace('<svg','<svg style="color:#ffb84d"')}<span class="lbl">Yönetici paneli</span><em class="lbl cnt" id="admCnt"></em>`; b.onclick=()=>{ view='admin'; renderMain(); $('#main').scrollTop=0 }; nav.appendChild(b) }
   if(admInfo.ready) loadAdmin(true);
 }
+// Yönetici girişi: Ctrl+Shift+Y
+document.addEventListener('keydown',async e=>{
+  if(!(e.ctrlKey&&e.shiftKey&&(e.key==='Y'||e.key==='y'))||!(window.ada&&ada.adminUnlock)) return; e.preventDefault();
+  if(isAdminUser){ view='admin'; renderMain(); return }
+  if(document.querySelector('.modal.admu')) return;
+  const m=document.createElement('div'); m.className='modal admu';
+  m.innerHTML=`<div class="box" style="width:min(440px,94vw)"><h3>Yönetici girişi</h3><p>Discord bot anahtarını ve panel kanalının ID'sini gir. Nabız anahtarı Discord'a sorarak doğrular; doğruysa bu bilgisayar kalıcı olarak yönetici olur.</p>
+    <input id="auTok" type="password" placeholder="Bot anahtarı" autocomplete="off" style="width:100%;margin:8px 0">
+    <input id="auCh" placeholder="Kanal ID (sadece rakam)" inputmode="numeric" style="width:100%;margin-bottom:6px">
+    <div class="sub" id="auErr" style="color:#ff6b81;min-height:18px"></div>
+    <div class="act"><button class="btn ghost" data-x>Vazgeç</button><button class="btn" data-ok>Giriş yap</button></div></div>`;
+  document.body.appendChild(m); m.querySelector('#auTok').focus();
+  m.onclick=async ev=>{ if(ev.target===m||ev.target.closest('[data-x]')) return m.remove();
+    const b=ev.target.closest('[data-ok]'); if(!b) return; b.disabled=true; b.textContent='Doğrulanıyor…'; m.querySelector('#auErr').textContent='';
+    const r=await ada.adminUnlock({token:m.querySelector('#auTok').value,channel:m.querySelector('#auCh').value}).catch(()=>({ok:false,error:'Bilinmeyen hata'}));
+    if(r&&r.ok){ m.remove(); toast('Yönetici girişi yapıldı ✓',3000); await initAdmin(); view='admin'; renderMain(); return }
+    b.disabled=false; b.textContent='Giriş yap'; m.querySelector('#auErr').textContent=r&&r.error||'Olmadı' } });
 async function loadAdmin(quiet){
   if(admLoading) return; admLoading=true; if(!quiet&&view==='admin') renderMain();
   try{ adm=await ada.adminData(30) }catch(e){ adm={error:e.message} } admLoading=false; admAt=Date.now();

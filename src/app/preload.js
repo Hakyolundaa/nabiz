@@ -29,6 +29,7 @@ contextBridge.exposeInMainWorld('ada', {
   telemetry: on => ipcRenderer.invoke('telemetry', on),
   adminInfo: () => ipcRenderer.invoke('admin-info'),
   adminConfig: c => ipcRenderer.invoke('admin-config', c),
+  adminUnlock: c => ipcRenderer.invoke('admin-unlock', c),
   adminData: d => ipcRenderer.invoke('admin-data', d),
   adminDelete: id => ipcRenderer.invoke('admin-delete', id),
   openUrl: u => ipcRenderer.invoke('open-url', u),

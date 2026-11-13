@@ -638,6 +638,18 @@ function run() {
     // ---------- Yönetici paneli: sadece Nabız'ı yayınlayan bilgisayarda (Dropbox/Nabiz/version.json orada) ----------
     const isAdmin = () => { try { return !!cfg.admin || fs.existsSync(path.join(app.getPath('home'), 'Dropbox', 'Nabiz', 'version.json')); } catch { return false; } };
     ipcMain.handle('admin-info', () => isAdmin() ? { admin: true, ready: !!(cfg.adminToken && cfg.adminChannel), channel: cfg.adminChannel || '', me: cfg.installId, hook: !!cfg.panelUrl } : { admin: false });
+    // Yönetici girişi: bot anahtarı o kanalı gerçekten okuyabiliyorsa bu bilgisayar kalıcı olarak yönetici olur (Dropbox'a bağlı değil)
+    ipcMain.handle('admin-unlock', async (_e, c) => {
+      try {
+        const tok = String(c && c.token || '').trim().replace(/^Bot\s+/i, ''), ch = String(c && c.channel || '').trim();
+        if (!tok || !/^\d{15,22}$/.test(ch)) return { ok: false, error: 'Bot anahtarı ve kanal ID gerekli' };
+        const r = await fetch(`https://discord.com/api/v10/channels/${ch}`, { headers: { Authorization: 'Bot ' + tok, 'User-Agent': 'DiscordBot (nabiz, 1)' }, signal: AbortSignal.timeout(15000) });
+        if (r.status === 401) return { ok: false, error: 'Bot anahtarı geçersiz' };
+        if (r.status === 403 || r.status === 404) return { ok: false, error: 'Bot bu kanalı göremiyor (kanal ID yanlış ya da bot sunucuda değil)' };
+        if (!r.ok) return { ok: false, error: 'Discord yanıt vermedi (' + r.status + ')' };
+        cfg.admin = true; cfg.adminToken = tok; cfg.adminChannel = ch; saveCfg(); return { ok: true };
+      } catch (e) { return { ok: false, error: "Discord'a ulaşılamadı. Türkiye'de Discord engelli olduğu için VPN ya da DNS ayarı gerekebilir." }; }
+    });
     ipcMain.handle('admin-config', (_e, c) => { if (!isAdmin()) return false; if (c.token) cfg.adminToken = String(c.token).trim().replace(/^Bot\s+/i, ''); cfg.adminChannel = String(c.channel || '').trim(); saveCfg(); return true; });
     ipcMain.handle('admin-data', async (_e, days = 30) => {
       if (!isAdmin() || !cfg.adminToken || !cfg.adminChannel) return { error: 'Panel ayarlanmamış' };
