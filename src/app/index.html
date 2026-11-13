@@ -764,7 +764,7 @@ body.light .modal .box{background:rgba(255,255,255,.9)}
 .lcshare{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:14px 0 4px}.lcshare>span{font-size:12px;color:var(--mut);margin-right:2px;font-weight:600}
 .lcshare button{display:flex;align-items:center;gap:7px;padding:7px 12px 7px 7px;border-radius:999px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.05);color:var(--text);font:inherit;font-size:13px;cursor:pointer}
 .lcshare button:hover{background:rgba(255,255,255,.1)}.lcshare b{display:grid;place-items:center;width:22px;height:22px;border-radius:50%;font-size:13px;color:#fff}
-.lcshare b.ig{background:radial-gradient(circle at 30% 110%,#fdf497 0,#fd5949 45%,#d6249f 60%,#285aeb 90%)}.lcshare b.wa{background:#25d366}.lcshare b.ph{background:linear-gradient(135deg,#ff2e63,#5b2cff)}.lcshare b.os{background:#555}
+.lcshare b.ig{background:radial-gradient(circle at 30% 110%,#fdf497 0,#fd5949 45%,#d6249f 60%,#285aeb 90%)}.lcshare b.wa{background:#25d366}.lcshare b.ph{background:linear-gradient(135deg,#ff2e63,#5b2cff)}.lcshare b.os{background:#555}.lcshare b.lv{background:linear-gradient(135deg,#7b5cff,#ff4fa3);animation:lvp 1.8s ease-in-out infinite}@keyframes lvp{50%{box-shadow:0 0 0 5px rgba(255,79,163,.25)}}
 #lcQR{margin-top:10px}#lcQR .qrbox{display:flex;gap:14px;align-items:center}#lcQR .qr{flex:none;background:#fff;padding:8px;border-radius:12px;width:166px;height:166px}#lcQR .qrinfo{font-size:12.5px;color:var(--mut);line-height:1.55}#lcQR code{display:block;margin-top:6px;font-size:11px;opacity:.6;word-break:break-all}
 .dly{position:relative;overflow:hidden;border-radius:22px;padding:34px 34px 24px;background:#16141c;border:1px solid rgba(255,255,255,.07)}
 .dlybg{position:absolute;inset:-40px;background:var(--dlyimg) center/cover;filter:blur(50px) saturate(1.5) brightness(.7);opacity:.9}
@@ -2485,13 +2485,13 @@ function openLyricCard(sel){
       <div class="ll">${L.map(o=>`<button data-i="${o.i}" class="${picked.has(o.i)?'on':''}">${LY.lines.length&&LY.lines[o.i]?`<em class="lt">${fmt(Math.max(0,LY.lines[o.i].t+lyOff()))}</em>`:''}${esc(o.t)}</button>`).join('')}</div>
       <div class="set-r"><b>Biçim</b><div class="seg" id="lcFmt"><button data-v="story" class="on">Hikâye</button><button data-v="post">Gönderi</button></div></div>
       ${LY.lines.length?`<label class="lctime"><input type="checkbox" id="lcT" ${showT?'checked':''}> Şarkıdaki dakikasını göster</label>`:''}
-      <div class="lcshare"><span>Paylaş</span><button data-sh="ig"><b class="ig">◎</b>Instagram</button><button data-sh="wa"><b class="wa">✆</b>WhatsApp</button><button data-sh="phone"><b class="ph">▯</b>Telefona gönder</button><button data-sh="os" hidden><b class="os">⇪</b>Diğer…</button></div>
+      <div class="lcshare"><span>Paylaş</span><button data-sh="ig"><b class="ig">◎</b>Instagram</button><button data-sh="wa"><b class="wa">✆</b>WhatsApp</button><button data-sh="phone"><b class="ph">▯</b>Telefona gönder</button>${LY.lines.length&&curVideoId()?`<button data-sh="live" title="Müzikli, hareketli kart linki"><b class="lv">◉</b>Canlı (müzikli)</button>`:''}<button data-sh="os" hidden><b class="os">⇪</b>Diğer…</button></div>
       <div id="lcQR" hidden></div>
       <div class="act" style="flex-wrap:wrap"><button class="btn ghost" data-x>Kapat</button><button class="btn ghost" data-save>Kaydet</button><button class="btn" data-copy>Panoya kopyala</button></div></div></div>`;
   document.body.appendChild(m);
   const sc=m.querySelector('.ll button.on'); if(sc) sc.scrollIntoView({block:'center'});
   let drawT=0;
-  const draw=async()=>{ const my=++drawT; const ord=[...picked].sort((a,b)=>a-b); const lines=ord.map(i=>all[i]); const at=showT&&LY.lines.length&&LY.lines[ord[0]]?Math.max(0,LY.lines[ord[0]].t+lyOff()):null; m._lc={lines,at,acc:(()=>{ const t=document.createElement('canvas').getContext('2d'); t.fillStyle=getComputedStyle(document.documentElement).getPropertyValue('--acc').trim()||'#ff3b5c'; return t.fillStyle })()}; canvas=await drawLyricCard(lines,fmtC,at); if(my!==drawT) return;
+  const draw=async()=>{ const my=++drawT; const ord=[...picked].sort((a,b)=>a-b); const lines=ord.map(i=>all[i]); const at=showT&&LY.lines.length&&LY.lines[ord[0]]?Math.max(0,LY.lines[ord[0]].t+lyOff()):null; m._lc={lines,at,ord,acc:(()=>{ const t=document.createElement('canvas').getContext('2d'); t.fillStyle=getComputedStyle(document.documentElement).getPropertyValue('--acc').trim()||'#ff3b5c'; return t.fillStyle })()}; canvas=await drawLyricCard(lines,fmtC,at); if(my!==drawT) return;
     const pv=m.querySelector('#lcPrev'); const img=new Image(); img.src=canvas.toDataURL('image/png'); img.style.cssText=`width:${fmtC==='story'?260:280}px;border-radius:14px;box-shadow:0 20px 50px rgba(0,0,0,.5)`; pv.innerHTML=''; pv.appendChild(img) };
   m.addEventListener('click',async e=>{
     if(e.target===m||e.target.closest('[data-x]')) return m.remove();
@@ -2513,6 +2513,21 @@ const SHARE_PAGE='https://hakyolundaa.github.io/nabiz/';
 async function shareLyricCard(kind,canvas,m,fmt){
   const title=`${disp.title||''} — ${disp.artist||''}`;
   if(kind==='os'){ try{ const f=new File([await lcBlob(canvas)],'nabiz-soz-karti.png',{type:'image/png'}); await navigator.share({files:[f],title}) }catch(er){ if(er&&er.name!=='AbortError') toast('Paylaşım açılamadı') } return }
+  if(kind==='live'){
+    const st=m._lc||{}, ord=st.ord||[], v=(curVideoId()||'').slice(0,11);
+    if(!LY.lines.length||!v||!ord.length){ toast('Canlı kart için zamanlı sözler gerekiyor'); return }
+    const off=lyOff(), ts=ord.map(i=>Math.max(0,Math.round((LY.lines[i].t+off)*100)/100)), nx=LY.lines[ord[ord.length-1]+1];
+    const e=Math.round(((nx?nx.t+off-.15:ts[ts.length-1]+5))*100)/100;
+    const d={v,t:disp.title||'',a:disp.artist||'',l:ord.map(i=>LY.lines[i].text),ts,e};
+    const b64=btoa(String.fromCharCode(...new TextEncoder().encode(JSON.stringify(d)))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
+    const url='https://hakyolundaa.github.io/nabiz/src/app/canli.html#d='+b64;
+    let copied=false; try{ await navigator.clipboard.writeText(url); copied=true }catch{}
+    const box=m.querySelector('#lcQR'); box.hidden=false;
+    box.innerHTML=`<div class="qrbox"><div class="qr" id="lcqrc"></div><div class="qrinfo"><b style="color:var(--text)">Canlı kart hazır.</b> Link açılınca kart hareket eder, şarkı ${fmt(ts[0])} anından çalar, sözler müzikle yanar.<br>${copied?'Link panoya kopyalandı — WhatsApp’a, DM’e ya da Instagram link çıkartmasına yapıştır.':'Linki aşağıdan kopyala.'} Telefonla okutup açabilirsin.<code>${esc(url)}</code><div style="display:flex;gap:8px;margin-top:8px"><button class="btn ghost" data-lvopen>Aç</button><button class="btn ghost" data-lvcopy>Kopyala</button></div></div></div>`;
+    box.querySelector('[data-lvopen]').onclick=()=>{ if(window.ada&&ada.openUrl) ada.openUrl(url); else window.open(url,'_blank') };
+    box.querySelector('[data-lvcopy]').onclick=async()=>{ try{ await navigator.clipboard.writeText(url); toast('Link kopyalandı') }catch{ toast('Kopyalanamadı') } };
+    try{ const QR=await loadQR(); new QR(box.querySelector('#lcqrc'),{text:url,width:150,height:150,correctLevel:QR.CorrectLevel.L}) }catch{ box.querySelector('#lcqrc').innerHTML='<span style="color:#000;font-size:12px;text-align:center">QR yüklenemedi</span>' }
+    return }
   if(kind==='wa'){
     const ok=await lcCopy(canvas);
     if(window.ada&&ada.shareOpen){ const r=await ada.shareOpen('whatsapp'); toast(ok?(r&&r.app?'WhatsApp açıldı — sohbeti seç, Ctrl+V ile kartı yapıştır, gönder':'WhatsApp Web açıldı — sohbeti seç, Ctrl+V ile kartı yapıştır'):'WhatsApp açıldı; kartı Kaydet ile kaydedip ekleyebilirsin',6000) }

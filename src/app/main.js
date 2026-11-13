@@ -680,7 +680,7 @@ function run() {
         return { ok: false, error: 'Discord HTTP ' + r.status };
       } catch (e) { return { ok: false, error: e.message }; }
     });
-    ipcMain.handle('open-url', (_e, u) => { if (/^https:\/\/(discord\.com|discord\.gg)\//.test(String(u))) shell.openExternal(u); });
+    ipcMain.handle('open-url', (_e, u) => { if (/^https:\/\/(discord\.com|discord\.gg)\//.test(String(u)) || /^https:\/\/hakyolundaa\.github\.io\/nabiz\//.test(String(u))) shell.openExternal(u); });
 
     // ---------- Söz kartını paylaş: telefona QR ile (geçici, sadece bu kart) ----------
     const shares = new Map(); let shareSrv = null, sharePort = 0, shareTimer = null;

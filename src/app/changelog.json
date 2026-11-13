@@ -1,5 +1,15 @@
 [
  {
+  "version": "2.16.5",
+  "date": "13 Kasım 2026",
+  "title": "Canlı söz kartı",
+  "changes": [
+   "Söz kartına yeni “Canlı (müzikli)” seçeneği: seçtiğin sözlerden bir link oluşur. Link açılınca kart hareket eder, şarkı tam o sözün saniyesinden çalar ve sözler müzikle birlikte kelime kelime yanar.",
+   "Linki WhatsApp’a, DM’e ya da Instagram hikâyesine link çıkartması olarak ekleyebilirsin. Açan kişi karta bir kez dokununca ses açılır.",
+   "Eski söz kartı resmi aynen duruyor; canlı kart onun yanına eklendi."
+  ]
+ },
+ {
   "version": "2.16.4",
   "date": "11 Kasım 2026",
   "title": "Ada her zaman tıklanır",
