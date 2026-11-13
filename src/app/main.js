@@ -257,7 +257,7 @@ function run() {
                 const m = JSON.parse(e.message);
                 if (!m || Math.abs(Date.now() - (+m.t || 0)) > 120000) continue;   // eski/gecikmiş komutları yok say
                 if (m.cmd === 'hello') { relayPublish(true); continue; }
-                if (['toggle', 'next', 'prev', 'seek', 'vol', 'volset'].includes(m.cmd)) server.sendCmd(m.cmd, m.v);
+                if (['toggle', 'next', 'prev', 'seek', 'vol', 'volset', 'handoff', 'takeback', 'pnext', 'pprev'].includes(m.cmd)) server.sendCmd(m.cmd, m.v);
               } catch {}
             }
           }
@@ -272,8 +272,8 @@ function run() {
     if (!cfg.remote || !relayCtl) return;
     const st = relayState || {};
     const has = !!(st.has && !st.priv);
-    const msg = has ? { has: true, title: st.title || '', artist: st.artist || '', thumb: st.thumb || '', playing: !!st.playing, pos: +st.pos || 0, dur: +st.dur || 0, vol: st.vol, acc: st.acc } : { has: false, vol: st.vol };
-    const key = JSON.stringify([msg.has, msg.title, msg.artist, msg.playing, Math.round((msg.vol || 0) / 2)]);
+    const msg = has ? { has: true, title: st.title || '', artist: st.artist || '', thumb: st.thumb || '', playing: !!st.playing, pos: +st.pos || 0, dur: +st.dur || 0, vol: st.vol, acc: st.acc, vid: /^[\w-]{11}$/.test(st.vid || '') ? st.vid : '', phone: !!st.phone } : { has: false, vol: st.vol };
+    const key = JSON.stringify([msg.has, msg.title, msg.artist, msg.playing, Math.round((msg.vol || 0) / 2), msg.vid, msg.phone]);
     if (!force && key === relaySentKey) return;
     const gap = Date.now() - relayLastPub;
     if (gap < 3000) { clearTimeout(relayTimer); relayTimer = setTimeout(() => relayPublish(force), 3000 - gap); return; }

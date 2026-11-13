@@ -1110,7 +1110,8 @@ window.onYouTubeIframeAPIReady=()=>{
     events:{
       onReady:()=>{ytReady=true;yt.setVolume(settings.volume);if(pendingYT){const f=pendingYT;pendingYT=null;f()}},
       onStateChange:e=>{ if(!cur||cur.src!=='yt')return;
-        if(e.data===1){setPlaying(true);ytMeta();applyVideoOpts();setTimeout(maybeNotify,600);prefetchNext()}
+        if(e.data===1&&holdPlay){ holdPlay=false; yt.pauseVideo(); setTimeout(pushState,300); return }
+        if(e.data===1){ phoneMode=false; setPlaying(true);ytMeta();applyVideoOpts();setTimeout(maybeNotify,600);prefetchNext()}
         else if(e.data===2)setPlaying(false);
         else if(e.data===0){
           if(cur.kind==='playlist'){const pl=yt.getPlaylist()||[];if(yt.getPlaylistIndex()<pl.length-1)return}
@@ -1211,6 +1212,7 @@ function prev(){
 }
 function ended(){ if(sleepAfterTrack){ sleepAfterTrack=false; paintSleep(); setPlaying(false); toast('Uyku zamanlayıcısı: müzik durduruldu 🌙',3500); return } if(repeat==='one'){seekTo(0);yt.playVideo()} else if(settings.autoNext!==false) next(); else setPlaying(false) }
 function seekTo(sec){ if(!cur)return; pos=Math.max(0,sec); setTimeout(pushState,300); if(ytReady)yt.seekTo(sec,true); paintProgress() }
+var phoneMode=false, holdPlay=false;
 function setPlaying(v){ if(playing===v)return; playing=v; document.body.classList.toggle('is-playing',v); islEl.classList.toggle('playing',v); paintButtons(); pushState(); updateMediaSession() }
 
 let pushTick=0;
@@ -2160,13 +2162,18 @@ function pushState(){
   pushT=setTimeout(()=>fetch('/api/state',{method:'POST',body:JSON.stringify({
     has:!!cur,title:disp.title,artist:disp.artist,thumb:disp.thumb,
     acc:getComputedStyle(document.documentElement).getPropertyValue('--acc').trim(),
-    playing,pos,dur,glow:settings.glow!==false,url:curUrl(),vol:settings.volume,priv:privateMode,
+    playing,pos,dur,glow:settings.glow!==false,url:curUrl(),vol:settings.volume,priv:privateMode,vid:cur&&cur.src==='yt'?curVideoId():'',phone:phoneMode,
     line:settings.islandLyrics!==false&&LY.lines.length&&LY.idx>=0?LY.lines[LY.idx].text:'',next:nextInfo()})}).catch(()=>{}),60);
 }
 if(location.protocol.startsWith('http')){
   const ev=new EventSource('/api/events?role=app');
   ev.onmessage=e=>{const m=JSON.parse(e.data); if(m.type!=='cmd')return;
-    if(m.cmd==='seek')seekTo(+m.v); else if(m.cmd==='vol'||m.cmd==='volset') setVolume(m.cmd==='vol'?settings.volume+(+m.v||0):+m.v); else ({toggle,next,prev})[m.cmd]?.();
+    if(m.cmd==='seek')seekTo(+m.v); else if(m.cmd==='vol'||m.cmd==='volset') setVolume(m.cmd==='vol'?settings.volume+(+m.v||0):+m.v);
+    // telefonda çal: şarkı telefona geçer, bilgisayar susar; geri verilince kaldığı yerden devam eder
+    else if(m.cmd==='handoff'){ phoneMode=true; if(playing) toggle(); toast('Şarkı telefonda çalıyor',2500) }
+    else if(m.cmd==='takeback'){ phoneMode=false; holdPlay=false; if(+m.v>=0) seekTo(+m.v); if(!playing) toggle(); toast('Şarkı bilgisayara geri döndü',2500) }
+    else if(m.cmd==='pnext'||m.cmd==='pprev'){ phoneMode=true; holdPlay=true; (m.cmd==='pnext'?next:prev)() }
+    else ({toggle,next,prev})[m.cmd]?.();
     setTimeout(pushState,400)};
   ev.onopen=()=>pushState();
 }

@@ -1,5 +1,15 @@
 [
  {
+  "version": "2.16.7",
+  "date": "13 Kasım 2026",
+  "title": "Telefonda çal",
+  "changes": [
+   "Telefon kumandasına “📱 Telefonda çal” geldi: bilgisayardaki şarkı susar, aynı şarkı telefonda kaldığı saniyeden devam eder; sözler de telefonda akar.",
+   "“💻 Bilgisayara geri ver” ile şarkı yine kaldığı yerden bilgisayarda sürer. Şarkı telefonda bitince sıradaki de telefonda başlar.",
+   "Telefon ekranı kilitlenince bazı telefonlar (özellikle iPhone) tarayıcıdaki müziği durdurabilir."
+  ]
+ },
+ {
   "version": "2.16.6",
   "date": "13 Kasım 2026",
   "title": "Küçük iyileştirmeler",
