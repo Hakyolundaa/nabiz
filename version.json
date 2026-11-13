@@ -1,7 +1,7 @@
 {
- "version": "2.16.6",
- "notes": "Küçük iyileştirmeler.",
- "zip": "https://github.com/Hakyolundaa/nabiz/releases/download/v2.16.6/nabiz-guncelleme.zip",
- "sha256": "b6e0aa2c6020dc73bb0d4afc3660f2f2dc85e50cb37b7f3ca278abff41a1659a",
- "sig": "JQLE8tDaI5sRhyjco0O9tjbItyQ5Lu+6Ntx8NuQiyJn9ufsDsZq1nEtgCGHR/ei1IkEu3dM29U5n9NLzCONxAg=="
+ "version": "2.16.7",
+ "notes": "Telefonda çal.",
+ "zip": "https://github.com/Hakyolundaa/nabiz/releases/download/v2.16.7/nabiz-guncelleme.zip",
+ "sha256": "eac19fc35ea10fae1e3af79bc3896bc863c10db59caaaa922bb9dbc8c91b84e3",
+ "sig": "RQKG0Eh7wSoIzn5zl0xbd9cA6nvYWRBVE3wIPZcbRE3z7n9OyMYLilTQbQofsXt3K6tnUpvHJOuFIsVnwKVbDA=="
 }
