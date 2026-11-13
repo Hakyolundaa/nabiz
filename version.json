@@ -1,8 +1,7 @@
 {
- "version": "2.16.4",
- "notes": "Ada her zaman tıklanır; kurulum eksik dosyaları onarıyor.",
- "zip": "https://github.com/Hakyolundaa/nabiz/releases/download/v2.16.4/nabiz-guncelleme.zip",
- "zipAlt": "https://www.dropbox.com/scl/fi/gxplktseyyqxjyjd89i7f/nabiz-guncelleme.zip?rlkey=ll4d94rsydxgqdxncd2tyuyxu&dl=0",
- "sha256": "5df348af52ac107a4826e9d17794d08449f2ad08aaf8c92965a50884b16482e6",
- "sig": "9A+kpU21LUB78kbtx0fCGUIuMS0MsbZqnoE30VNY5tdrna27tq07hugnzBHzriAuVEiOGykPKNEfPaeWmCbdDA=="
+ "version": "2.16.5",
+ "notes": "Canlı söz kartı: şarkı o sözden çalar.",
+ "zip": "https://github.com/Hakyolundaa/nabiz/releases/download/v2.16.5/nabiz-guncelleme.zip",
+ "sha256": "52510e99287bc45029f563944842d66f125ba896e505a1292f1456f20747076a",
+ "sig": "LOLHY0/nBfUHlhBKCNmOKaDm9el911shRYtcokYn98dsPAOvjg5VL7dNU3gDbvVGHAQwmprOdoWd3Btsn4CcCg=="
 }
