@@ -1,7 +1,7 @@
 {
- "version": "2.16.5",
- "notes": "Canlı söz kartı: şarkı o sözden çalar.",
- "zip": "https://github.com/Hakyolundaa/nabiz/releases/download/v2.16.5/nabiz-guncelleme.zip",
- "sha256": "52510e99287bc45029f563944842d66f125ba896e505a1292f1456f20747076a",
- "sig": "LOLHY0/nBfUHlhBKCNmOKaDm9el911shRYtcokYn98dsPAOvjg5VL7dNU3gDbvVGHAQwmprOdoWd3Btsn4CcCg=="
+ "version": "2.16.6",
+ "notes": "Küçük iyileştirmeler.",
+ "zip": "https://github.com/Hakyolundaa/nabiz/releases/download/v2.16.6/nabiz-guncelleme.zip",
+ "sha256": "b6e0aa2c6020dc73bb0d4afc3660f2f2dc85e50cb37b7f3ca278abff41a1659a",
+ "sig": "JQLE8tDaI5sRhyjco0O9tjbItyQ5Lu+6Ntx8NuQiyJn9ufsDsZq1nEtgCGHR/ei1IkEu3dM29U5n9NLzCONxAg=="
 }
