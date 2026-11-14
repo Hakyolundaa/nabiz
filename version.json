@@ -1,7 +1,7 @@
 {
- "version": "2.16.7",
- "notes": "Telefonda çal.",
- "zip": "https://github.com/Hakyolundaa/nabiz/releases/download/v2.16.7/nabiz-guncelleme.zip",
- "sha256": "eac19fc35ea10fae1e3af79bc3896bc863c10db59caaaa922bb9dbc8c91b84e3",
- "sig": "RQKG0Eh7wSoIzn5zl0xbd9cA6nvYWRBVE3wIPZcbRE3z7n9OyMYLilTQbQofsXt3K6tnUpvHJOuFIsVnwKVbDA=="
+ "version": "2.16.8",
+ "notes": "Canlı kart düzeltmesi ve paylaşım.",
+ "zip": "https://github.com/Hakyolundaa/nabiz/releases/download/v2.16.8/nabiz-guncelleme.zip",
+ "sha256": "dbe49dfa9d15f7cfd892a6e3e7295fa0b766a6d3a63c96cab7df2385dbfc8cfc",
+ "sig": "iGlJDo5cSwM7TvICHlzHkea4jmOnbSPrieNURYzvhk2o+wRvw04nju3p0Nq8SDfLFkdEXBIKDYsAF8qq0cTBAQ=="
 }
