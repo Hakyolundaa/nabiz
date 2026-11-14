@@ -21,7 +21,7 @@ contextBridge.exposeInMainWorld('ada', {
   front: () => ipcRenderer.send('island-front'),
   saveImage: (dataUrl, name) => ipcRenderer.invoke('save-image', dataUrl, name),
   shareCard: (dataUrl, title) => ipcRenderer.invoke('share-card', dataUrl, title),
-  shareOpen: target => ipcRenderer.invoke('share-open', target),
+  shareOpen: (target, text) => ipcRenderer.invoke('share-open', target, text),
   shareCardWeb: dataUrl => ipcRenderer.invoke('share-card-web', dataUrl),
   notify: n => ipcRenderer.invoke('notify', n),
   report: r => ipcRenderer.invoke('report', r),

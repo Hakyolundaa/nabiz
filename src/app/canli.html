@@ -43,6 +43,12 @@ canvas.bg{position:absolute;inset:0;width:100%;height:100%;z-index:-2}
 .pick button{display:flex;gap:12px;width:100%;text-align:left;background:none;border:0;color:#cfcfd6;font:500 15px Outfit,sans-serif;padding:10px 12px;border-radius:12px;cursor:pointer}
 .pick button em{font-style:normal;opacity:.5;font-variant-numeric:tabular-nums;min-width:38px}
 .pick button.on{background:#2a2a33;color:#fff}
+.share{width:min(420px,94vw);display:flex;gap:8px}
+.share button{flex:1;height:50px;border-radius:16px;border:0;font:600 14.5px Outfit,system-ui,sans-serif;color:#fff;background:#1c1c23;display:flex;align-items:center;justify-content:center;gap:7px;cursor:pointer}
+.share button:active{transform:scale(.97)}
+.share .wa{background:#25d366;color:#05230f}.share .ig{background:linear-gradient(45deg,#f9ce34,#ee2a7b 50%,#6228d7)}
+.tst{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:#fff;color:#111;font:600 14px Outfit,sans-serif;padding:12px 18px;border-radius:14px;box-shadow:0 10px 30px rgba(0,0,0,.4);max-width:92vw;text-align:center;opacity:0;transition:opacity .3s;pointer-events:none;z-index:9}
+.tst.on{opacity:1}
 .foot{font-size:12.5px;opacity:.5;text-align:center;max-width:420px;line-height:1.5}
 </style></head><body>
 <div class="card" id="card">
@@ -55,6 +61,8 @@ canvas.bg{position:absolute;inset:0;width:100%;height:100%;z-index:-2}
   <div class="btn glass" id="play"><span id="bt">Hazırlanıyor…</span><span class="bar" id="pbar"></span></div>
   <div class="flash" id="flash"></div>
 </div>
+<div class="share"><button class="wa" id="shWa">WhatsApp</button><button class="ig" id="shIg">Instagram</button><button id="shMore">Paylaş…</button></div>
+<div class="tst" id="tst"></div>
 <div class="pick"><h3>Başka bir sözü seç</h3><div class="list" id="list"></div></div>
 <p class="foot">Bu canlı söz kartı <a href="https://github.com/Hakyolundaa/nabiz/releases/latest" style="color:#fff">Nabız</a> ile oluşturuldu · Müzik YouTube oynatıcısından çalar. Tarayıcılar ilk dokunuştan önce sesli çalmaya izin vermediği için müzik sessiz başlar; karta dokun.</p>
 <script>
@@ -126,6 +134,33 @@ function loop(now){ drawBg(now); beat*=.93;
     if(t>=END) restart() }
   requestAnimationFrame(loop) }
 requestAnimationFrame(loop);
+
+/* -------- paylaşım: WhatsApp, Instagram hikâyesi, diğerleri -------- */
+const tst=(t,ms=4500)=>{ const e=$('tst'); e.textContent=t; e.classList.add('on'); clearTimeout(tst.t); tst.t=setTimeout(()=>e.classList.remove('on'),ms) };
+const shareText=()=>`🎧 ${TIT}${ART?' — '+ART:''}${SEL[0]?'\n“'+SEL[0].s+'”':''}`;
+async function copyLink(){ try{ await navigator.clipboard.writeText(location.href); return true }catch{ return false } }
+$('shWa').onclick=()=>{ open('https://wa.me/?text='+encodeURIComponent(shareText()+'\n'+location.href),'_blank') };
+$('shMore').onclick=async()=>{ if(navigator.share){ try{ await navigator.share({title:TIT,text:shareText(),url:location.href}) }catch{} } else { tst(await copyLink()?'Link kopyalandı':'Linki adres çubuğundan kopyala') } };
+function wrapT(x,s,w){ const o=[]; let l=''; for(const wd of s.split(/\s+/)){ const t=l?l+' '+wd:wd; if(x.measureText(t).width>w&&l){ o.push(l); l=wd } else l=t } if(l) o.push(l); return o }
+function storyImage(){ const W=1080,H=1920,c=document.createElement('canvas'); c.width=W; c.height=H; const x=c.getContext('2d');
+  x.fillStyle=pal[0]; x.fillRect(0,0,W,H); x.globalCompositeOperation='lighter';
+  [[.2,.18,1],[.85,.4,2],[.3,.8,3],[.8,.9,1]].forEach(([px,py,k])=>{ const g=x.createRadialGradient(W*px,H*py,0,W*px,H*py,W*.85); g.addColorStop(0,pal[k]+'cc'); g.addColorStop(1,pal[k]+'00'); x.fillStyle=g; x.fillRect(0,0,W,H) });
+  x.globalCompositeOperation='source-over'; x.fillStyle='rgba(0,0,0,.28)'; x.fillRect(0,0,W,H);
+  const F='Outfit, system-ui, sans-serif'; let y=230;
+  if(im.complete&&im.naturalWidth){ const cw=880,ch=495,cx=(W-cw)/2; x.save(); x.shadowColor='rgba(0,0,0,.45)'; x.shadowBlur=70; x.shadowOffsetY=30; x.beginPath(); x.roundRect(cx,y,cw,ch,44); x.fillStyle='#000'; x.fill(); x.restore(); x.save(); x.beginPath(); x.roundRect(cx,y,cw,ch,44); x.clip(); x.drawImage(im,0,45,480,270,cx,y,cw,ch); x.restore(); y+=ch+90 } else y+=120;
+  x.fillStyle='#fff'; x.font=`700 54px ${F}`; x.fillText(TIT.slice(0,40),100,y); x.fillStyle='rgba(255,255,255,.72)'; x.font=`500 40px ${F}`; x.fillText(ART.slice(0,40),100,y+58); y+=150;
+  let fs=82; const lines=SEL.map(l=>l.s); let rows; const lay=()=>{ x.font=`700 ${fs}px ${F}`; rows=[]; lines.forEach(l=>rows.push(...wrapT(x,l,W-200))) }; lay(); while(rows.length*fs*1.16>H-y-380&&fs>44){ fs-=4; lay() }
+  const by=H-260, ly=y+Math.max(0,((by-80-y)-rows.length*fs*1.16)/2);
+  x.fillStyle='#fff'; x.letterSpacing='-1.5px'; rows.forEach((r,i)=>x.fillText(r,100,ly+fs*.85+i*fs*1.16)); x.letterSpacing='0px';
+  const bw=W-200; x.fillStyle='rgba(255,255,255,.16)'; x.beginPath(); x.roundRect(100,by,(W-200),120,60); x.fill(); x.strokeStyle='rgba(255,255,255,.4)'; x.lineWidth=2; x.stroke();
+  x.fillStyle='#fff'; x.beginPath(); x.arc(170,by+60,36,0,7); x.fill(); x.fillStyle='#111'; x.beginPath(); x.moveTo(160,by+42); x.lineTo(186,by+60); x.lineTo(160,by+78); x.closePath(); x.fill();
+  x.fillStyle='#fff'; x.font=`600 40px ${F}`; x.fillText('Dinlemek için bağlantıya dokun · '+fmt(START||0),232,by+74);
+  [0.5,1,0.7,0.9].forEach((h,i)=>{ x.fillStyle='rgba(255,255,255,.8)'; x.beginPath(); x.roundRect(W/2-70+i*15,H-90-30*h,9,30*h,4); x.fill() }); x.fillStyle='rgba(255,255,255,.8)'; x.font=`700 32px ${F}`; x.fillText('Nabız',W/2-4,H-62);
+  return new Promise(r=>c.toBlob(r,'image/png')) }
+$('shIg').onclick=async()=>{ const ok=await copyLink(); const blob=await storyImage(); const f=new File([blob],'nabiz-canli-kart.png',{type:'image/png'});
+  const hint=(ok?'Link kopyalandı. ':'')+'Instagram’da hikâyeye bu görseli koy, “Bağlantı” çıkartması ekle ve linki yapıştır.';
+  if(navigator.canShare&&navigator.canShare({files:[f]})){ tst(hint,9000); try{ await navigator.share({files:[f]}) }catch{} }
+  else { const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=f.name; document.body.append(a); a.click(); a.remove(); tst('Görsel indirildi. '+hint,9000) } };
 
 (async()=>{
   if(D&&Array.isArray(D.l)&&Array.isArray(D.ts)&&D.l.length){

@@ -1,5 +1,15 @@
 [
  {
+  "version": "2.16.8",
+  "date": "14 Kasım 2026",
+  "title": "Canlı kart düzeltildi + paylaşım",
+  "changes": [
+   "Söz kartındaki “Canlı (müzikli)” düğmesi tepki vermiyordu, düzeltildi.",
+   "Canlı kartı tek tıkla WhatsApp’ta gönderebilirsin: mesaj, sözün ve linkle hazır gelir.",
+   "Canlı kart sayfasında WhatsApp, Instagram ve Paylaş düğmeleri var. Instagram düğmesi hikâye görselini hazırlar ve linki kopyalar; hikâyede “Bağlantı” çıkartmasına yapıştırırsın."
+  ]
+ },
+ {
   "version": "2.16.7",
   "date": "13 Kasım 2026",
   "title": "Telefonda çal",

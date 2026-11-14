@@ -2527,11 +2527,13 @@ async function shareLyricCard(kind,canvas,m,fmt){
     const e=Math.round(((nx?nx.t+off-.15:ts[ts.length-1]+5))*100)/100;
     const d={v,t:disp.title||'',a:disp.artist||'',l:ord.map(i=>LY.lines[i].text),ts,e};
     const b64=btoa(String.fromCharCode(...new TextEncoder().encode(JSON.stringify(d)))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
-    const url='https://hakyolundaa.github.io/nabiz/src/app/canli.html#d='+b64;
+    const url='https://hakyolundaa.github.io/nabiz/src/app/canli.html#d='+b64, mmss=x=>Math.floor(x/60)+':'+String(Math.floor(x%60)).padStart(2,'0');
+    const msg=`🎧 ${disp.title||''}${disp.artist?' — '+disp.artist:''}\n“${d.l[0]}”\n${url}`;
     let copied=false; try{ await navigator.clipboard.writeText(url); copied=true }catch{}
     const box=m.querySelector('#lcQR'); box.hidden=false;
-    box.innerHTML=`<div class="qrbox"><div class="qr" id="lcqrc"></div><div class="qrinfo"><b style="color:var(--text)">Canlı kart hazır.</b> Link açılınca kart hareket eder, şarkı ${fmt(ts[0])} anından çalar, sözler müzikle yanar.<br>${copied?'Link panoya kopyalandı — WhatsApp’a, DM’e ya da Instagram link çıkartmasına yapıştır.':'Linki aşağıdan kopyala.'} Telefonla okutup açabilirsin.<code>${esc(url)}</code><div style="display:flex;gap:8px;margin-top:8px"><button class="btn ghost" data-lvopen>Aç</button><button class="btn ghost" data-lvcopy>Kopyala</button></div></div></div>`;
+    box.innerHTML=`<div class="qrbox"><div class="qr" id="lcqrc"></div><div class="qrinfo"><b style="color:var(--text)">Canlı kart hazır.</b> Link açılınca kart hareket eder, şarkı ${mmss(ts[0])} anından çalar, sözler müzikle yanar.<br>${copied?'Link panoya kopyalandı.':''} <b>Instagram hikâyesi için</b> QR'ı telefonla okut; açılan sayfadaki “Instagram hikâyesi” düğmesi hikâye görselini hazırlar.<div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap"><button class="btn" data-lvwa style="background:#25d366;color:#04210f">WhatsApp’ta gönder</button><button class="btn ghost" data-lvopen>Aç</button><button class="btn ghost" data-lvcopy>Linki kopyala</button></div></div></div>`;
     box.querySelector('[data-lvopen]').onclick=()=>{ if(window.ada&&ada.openUrl) ada.openUrl(url); else window.open(url,'_blank') };
+    box.querySelector('[data-lvwa]').onclick=async()=>{ if(window.ada&&ada.shareOpen){ const r=await ada.shareOpen('whatsapp',msg); toast(r&&r.app?'WhatsApp açıldı — sohbeti seç, mesaj hazır':'WhatsApp Web açıldı — sohbeti seç, mesaj hazır',5000) } else window.open('https://wa.me/?text='+encodeURIComponent(msg),'_blank') };
     box.querySelector('[data-lvcopy]').onclick=async()=>{ try{ await navigator.clipboard.writeText(url); toast('Link kopyalandı') }catch{ toast('Kopyalanamadı') } };
     try{ const QR=await loadQR(); new QR(box.querySelector('#lcqrc'),{text:url,width:150,height:150,correctLevel:QR.CorrectLevel.L}) }catch{ box.querySelector('#lcqrc').innerHTML='<span style="color:#000;font-size:12px;text-align:center">QR yüklenemedi</span>' }
     return }

@@ -752,11 +752,12 @@ p{color:rgba(255,255,255,.7);font-size:14px;line-height:1.5;max-width:420px;marg
       return { ok: false, error: 'İnternete yüklenemedi (' + last + ')' };
     });
     // Bilgisayarda: WhatsApp masaüstü / Instagram web aç
-    ipcMain.handle('share-open', async (_e, target) => {
+    ipcMain.handle('share-open', async (_e, target, text) => {
       if (target === 'whatsapp') {
+        const q = typeof text === 'string' && text ? 'send?text=' + encodeURIComponent(text.slice(0, 3000)) : '';
         let has = false; try { has = !!app.getApplicationNameForProtocol('whatsapp://'); } catch {}
-        if (has) { try { await shell.openExternal('whatsapp://'); return { ok: true, app: true }; } catch {} }
-        shell.openExternal('https://web.whatsapp.com/'); return { ok: true, app: false };
+        if (has) { try { await shell.openExternal('whatsapp://' + q); return { ok: true, app: true }; } catch {} }
+        shell.openExternal('https://web.whatsapp.com/' + q); return { ok: true, app: false };
       }
       if (target === 'instagram') { shell.openExternal('https://www.instagram.com/'); return { ok: true }; }
       return { ok: false };
