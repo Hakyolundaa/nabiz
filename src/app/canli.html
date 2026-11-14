@@ -157,10 +157,45 @@ function storyImage(){ const W=1080,H=1920,c=document.createElement('canvas'); c
   x.fillStyle='#fff'; x.font=`600 40px ${F}`; x.fillText('Dinlemek için bağlantıya dokun · '+fmt(START||0),232,by+74);
   [0.5,1,0.7,0.9].forEach((h,i)=>{ x.fillStyle='rgba(255,255,255,.8)'; x.beginPath(); x.roundRect(W/2-70+i*15,H-90-30*h,9,30*h,4); x.fill() }); x.fillStyle='rgba(255,255,255,.8)'; x.font=`700 32px ${F}`; x.fillText('Nabız',W/2-4,H-62);
   return new Promise(r=>c.toBlob(r,'image/png')) }
-$('shIg').onclick=async()=>{ const ok=await copyLink(); const blob=await storyImage(); const f=new File([blob],'nabiz-canli-kart.png',{type:'image/png'});
-  const hint=(ok?'Link kopyalandı. ':'')+'Instagram’da hikâyeye bu görseli koy, “Bağlantı” çıkartması ekle ve linki yapıştır.';
-  if(navigator.canShare&&navigator.canShare({files:[f]})){ tst(hint,9000); try{ await navigator.share({files:[f]}) }catch{} }
-  else { const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=f.name; document.body.append(a); a.click(); a.remove(); tst('Görsel indirildi. '+hint,9000) } };
+/* Instagram: 12 sn'lik sessiz hareketli hikâye videosu (müziği Instagram'ın müzik çıkartmasıyla eklersin) */
+const VDUR=12;
+function vidMime(){ if(!window.MediaRecorder) return ''; for(const m of ['video/mp4;codecs=avc1.42E01E','video/mp4;codecs=avc1','video/mp4']) if(MediaRecorder.isTypeSupported(m)) return m; return '' }
+function storyFrame(x,W,H,t){ const F='Outfit, system-ui, sans-serif', k=W/1080;
+  x.fillStyle=pal[0]; x.fillRect(0,0,W,H); x.globalCompositeOperation='lighter';
+  blobs.forEach(bl=>{ const tt=t*bl.s*1.6+bl.a, X=W*(.5+.38*Math.sin(tt+bl.ox*6)), Y=H*(.5+.4*Math.cos(tt*.8+bl.oy*6)), R=W*bl.r*1.1; const g=x.createRadialGradient(X,Y,0,X,Y,R), c=pal[1+bl.c]; g.addColorStop(0,c+'88'); g.addColorStop(1,c+'00'); x.fillStyle=g; x.fillRect(0,0,W,H) });
+  x.globalCompositeOperation='source-over'; x.fillStyle='rgba(0,0,0,.34)'; x.fillRect(0,0,W,H);
+  const fin=Math.min(1,t/.8); x.globalAlpha=fin; let y=200*k;
+  if(im.complete&&im.naturalWidth){ const cw=880*k,ch=495*k,cx=(W-cw)/2, sc=1+.015*Math.sin(t*2); x.save(); x.translate(W/2,y+ch/2); x.scale(sc,sc); x.translate(-W/2,-(y+ch/2)); x.shadowColor='rgba(0,0,0,.45)'; x.shadowBlur=60*k; x.shadowOffsetY=26*k; x.beginPath(); x.roundRect(cx,y,cw,ch,40*k); x.fillStyle='#000'; x.fill(); x.shadowColor='transparent'; x.beginPath(); x.roundRect(cx,y,cw,ch,40*k); x.clip(); x.drawImage(im,0,45,480,270,cx,y,cw,ch); x.restore(); y+=ch+80*k } else y+=100*k;
+  x.fillStyle='#fff'; x.font=`700 ${54*k}px ${F}`; x.fillText(TIT.slice(0,40),100*k,y); x.fillStyle='rgba(255,255,255,.72)'; x.font=`500 ${40*k}px ${F}`; x.fillText(ART.slice(0,40),100*k,y+58*k); y+=140*k;
+  // sözler: kelime kelime yanar (gerçek zamanlamaya göre ölçeklenmiş)
+  const span=Math.max(1,END-START), sca=(VDUR-2)/span; let fs=80*k, rows; const words=[];
+  const lay=()=>{ x.font=`700 ${fs}px ${F}`; rows=[]; words.length=0; SEL.forEach((l,li)=>{ const ws=l.s.split(/\s+/), nt=(SEL[li+1]?SEL[li+1].t:END), d=Math.max(.6,(nt-l.t)*.85); let row=[], rw=0; ws.forEach((w,j)=>{ const ww=x.measureText(w+' ').width; if(rw+ww>W-200*k&&row.length){ rows.push(row); row=[]; rw=0 } const o={w,at:.6+(l.t-START+d*j/ws.length)*sca}; row.push(o); words.push(o); rw+=ww }); if(row.length) rows.push(row) }) };
+  lay(); const by=H-240*k; while(rows.length*fs*1.16>by-80*k-y&&fs>40*k){ fs-=4*k; lay() }
+  let ly=y+Math.max(0,((by-80*k-y)-rows.length*fs*1.16)/2);
+  rows.forEach((row,i)=>{ let xx=100*k; const yy=ly+fs*.85+i*fs*1.16; row.forEach(o=>{ const lit=t>=o.at, p=Math.min(1,Math.max(0,(t-o.at)/.25)); x.fillStyle=lit?`rgba(255,255,255,${.4+.6*p})`:'rgba(255,255,255,.4)'; if(lit&&p<1){ x.shadowColor='rgba(255,255,255,.6)'; x.shadowBlur=24*k*(1-p) } x.fillText(o.w,xx,yy); x.shadowBlur=0; xx+=x.measureText(o.w+' ').width }) });
+  // nabız çizgisi
+  x.strokeStyle='rgba(255,255,255,.85)'; x.lineWidth=4*k; x.beginPath(); const ey=by-60*k, sp=(t*300*k)%W;
+  for(let xx=0;xx<=W;xx+=6*k){ const q=(((xx-sp)%W+W)%W)/W; let yy=ey; if(q>.42&&q<.58){ const u=(q-.42)/.16; yy=ey-Math.sin(u*Math.PI*3)*28*k*Math.sin(u*Math.PI)*(1+.6*Math.abs(Math.sin(t*6.5))) } xx?x.lineTo(xx,yy):x.moveTo(xx,yy) } x.stroke();
+  x.fillStyle='rgba(255,255,255,.16)'; x.beginPath(); x.roundRect(100*k,by,W-200*k,110*k,55*k); x.fill(); x.strokeStyle='rgba(255,255,255,.4)'; x.lineWidth=2*k; x.stroke();
+  x.fillStyle='#fff'; x.font=`600 ${38*k}px ${F}`; x.fillText('♪ '+fmt(START||0)+'  ·  Dinlemek için bağlantıya dokun',150*k,by+68*k);
+  x.globalAlpha=1 }
+async function storyVideo(onP){ const mime=vidMime(); if(!mime) return null; const W=720,H=1280,c=document.createElement('canvas'); c.width=W; c.height=H; const x=c.getContext('2d');
+  storyFrame(x,W,H,0); const st=c.captureStream(30), rec=new MediaRecorder(st,{mimeType:mime,videoBitsPerSecond:5e6}), ch=[]; rec.ondataavailable=e=>{ if(e.data&&e.data.size) ch.push(e.data) };
+  const done=new Promise(r=>rec.onstop=r); rec.start(250); const t0=performance.now();
+  await new Promise(res=>{ (function f(){ const t=(performance.now()-t0)/1000; storyFrame(x,W,H,Math.min(t,VDUR)); onP&&onP(Math.min(1,t/VDUR)); if(t<VDUR) requestAnimationFrame(f); else res() })() });
+  rec.stop(); await done; st.getTracks().forEach(tr=>tr.stop()); return new File([new Blob(ch,{type:'video/mp4'})],'nabiz-canli-kart.mp4',{type:'video/mp4'}) }
+let igBusy=false, igReady=null;
+const igHint=ok=>`${ok?'Link kopyalandı. ':''}Instagram’da: 1) Müzik çıkartması ekle, “${TIT}” şarkısını seç ve ${fmt(START||0)}’e getir. 2) Bağlantı çıkartması ekle, linki yapıştır.`;
+async function igShare(f){ const ok=await copyLink(); const hint=igHint(ok);
+  if(navigator.canShare&&navigator.canShare({files:[f]})){ tst(hint,12000); try{ await navigator.share({files:[f]}) }catch{} }
+  else { const a=document.createElement('a'); a.href=URL.createObjectURL(f); a.download=f.name; document.body.append(a); a.click(); a.remove(); tst((f.type.startsWith('video')?'Video':'Görsel')+' indirildi. '+hint,12000) } }
+$('shIg').onclick=async()=>{ const btn=$('shIg');
+  if(igReady){ const f=igReady; igReady=null; btn.textContent='Instagram'; await igShare(f); return }   // ikinci dokunuş: paylaşım menüsü
+  if(igBusy) return; igBusy=true;
+  try{ let f=null; try{ f=await storyVideo(p=>btn.textContent='Video '+Math.round(p*100)+'%') }catch{ f=null }
+    if(!f){ const blob=await storyImage(); f=new File([blob],'nabiz-canli-kart.png',{type:'image/png'}) }
+    igReady=f; btn.textContent='Hazır — Instagram’a gönder ▶'; tst('Video hazır. Göndermek için düğmeye bir kez daha dokun.',6000)
+  } finally { igBusy=false } };
 
 (async()=>{
   if(D&&Array.isArray(D.l)&&Array.isArray(D.ts)&&D.l.length){
